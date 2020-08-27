@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="category_strings">
+        <item>Income</item>
+        <item>Food</item>
+        <item>Car</item>
+        <item>Clothes</item>
+        <item>Savings</item>
+        <item>Health</item>
+        <item>Beauty</item>
+        <item>Travel</item>
+    </string-array>
+    <integer-array name="category_icons">
+        <item>@drawable/ic_category_income</item>
+        <item>@drawable/ic_category_food</item>
+        <item>@drawable/ic_category_car</item>
+        <item>@drawable/ic_category_clothes</item>
+        <item>@drawable/ic_category_savings</item>
+        <item>@drawable/ic_category_health</item>
+        <item>@drawable/ic_category_beauty</item>
+        <item>@drawable/ic_category_travel</item>
+    </integer-array>
+</resources>

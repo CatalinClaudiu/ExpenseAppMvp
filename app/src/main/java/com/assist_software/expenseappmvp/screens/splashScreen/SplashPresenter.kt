@@ -9,10 +9,11 @@ import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
 class SplashPresenter(
-        private val view: SplashView,
-        private val rxSchedulers: RxSchedulers,
-        private val userRepository: UserRepository,
-        private val compositeDisposables: CompositeDisposable) {
+    private val view: SplashView,
+    private val rxSchedulers: RxSchedulers,
+    private val userRepository: UserRepository,
+    private val compositeDisposables: CompositeDisposable
+) {
 
     private val loggedUserId = 0L
 
@@ -26,16 +27,16 @@ class SplashPresenter(
 
     private fun verifyUserLoggedIn(): Disposable {
         return Observable.timer(SPLASH_SCREEN_DURATION, TimeUnit.SECONDS)
-                .observeOn(rxSchedulers.background())
-                .flatMap { userRepository.getUser(loggedUserId).toObservable() }
-                .observeOn(rxSchedulers.androidUI())
-                .subscribe {
-                    if (it is User) {
-                        view.showMainScreen()
-                    } else {
-                        view.showLoginScreen()
-                    }
+            .observeOn(rxSchedulers.background())
+            .flatMap { userRepository.getUser(loggedUserId).toObservable() }
+            .observeOn(rxSchedulers.androidUI())
+            .subscribe {
+                if (it is User) {
+                    view.showMainScreen()
+                } else {
+                    view.showLoginScreen()
                 }
+            }
     }
 
     companion object {

@@ -3,4 +3,21 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorGreen">#1AA972</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorOrange">#F57314</color>
+    <color name="colorGray">#74777A</color>
+    <color name="colorLightGreen">#01A39D</color>
+    <color name="colorLightGray">#FAFAFA</color>
+    <color name="colorGrayBackground">#E5E5E5</color>
+    <color name="colorGrayCategory">#F5F3F3</color>
+    <color name="colorGrayTransaction">#F7F4F4</color>
+    <color name="colorGrayTransactionBorder">#DCDCDC</color>
+    <color name="colorTransparentGreen">#40009688</color>
+    <color name="colorTransparentRed">#40E05858</color>
+    <color name="colorRed">#FD1313</color>
+    <color name="colorChartGreen">#3ddc4d</color>
+    <color name="colorUnselectedView">#FFF9F9</color>
+    <color name="colorConverterBorder">#D8D8D8</color>
 </resources>

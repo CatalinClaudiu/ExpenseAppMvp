@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".screens.main.fragments.expenses.ExpensesFragment"
+    android:background="@color/colorWhite">
+
+    <ImageView
+        android:id="@+id/border"
+        android:layout_width="@dimen/space_0dp"
+        android:layout_height="38dp"
+        android:background="@drawable/segment_view_background"
+        android:layout_marginTop="@dimen/space_17dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.81" />
+
+    <com.trinnguyen.SegmentView
+        android:id="@+id/interval_segment_view"
+        android:layout_width="@dimen/space_0dp"
+        android:layout_height="36dp"
+        app:separateLineColor="@color/colorGreen"
+        app:unselectedTextColor="@color/colorBlack"
+        app:selectedTextColor="@color/colorWhite"
+        app:selectedBackgroundColor="@color/colorGreen"
+        app:unselectedBackgroundColor="@color/colorUnselectedView"
+        app:textAppearance="@style/SegmentViewStyle"
+        app:numSegments="3"
+        app:selectedIndex="0"
+        app:layout_constraintTop_toTopOf="@id/border"
+        app:layout_constraintStart_toStartOf="@id/border"
+        app:layout_constraintEnd_toEndOf="@id/border"
+        app:layout_constraintBottom_toBottomOf="@+id/border"
+        app:layout_constraintWidth_percent="0.8"/>
+
+    <TextView
+        android:id="@+id/total_expense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/total_expensed"
+        android:textSize="@dimen/text_16sp"
+        android:textColor="@color/colorBlack"
+        android:fontFamily="@font/roboto_normal"
+        android:layout_marginTop="@dimen/space_15dp"
+        app:layout_constraintTop_toBottomOf="@+id/border"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.13"/>
+
+    <TextView
+        android:id="@+id/total_expense_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="890"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_16sp"
+        android:fontFamily="@font/roboto_normal"
+        android:layout_marginTop="@dimen/space_15dp"
+        app:layout_constraintTop_toBottomOf="@+id/border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.90"/>
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pieChart"
+        tools:background="@color/colorOrange"
+        android:layout_width="@dimen/space_300dp"
+        android:layout_height="@dimen/space_250dp"
+        android:layout_marginTop="@dimen/space_38dp"
+        app:layout_constraintTop_toBottomOf="@id/total_expense"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/transactions_recycler"
+        android:layout_width="@dimen/space_0dp"
+        android:layout_height="@dimen/space_0dp"
+        android:layout_marginTop="@dimen/space_29dp"
+        app:layout_constraintTop_toBottomOf="@+id/pieChart"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_percent="0.9"
+        app:layout_constraintVertical_bias="0.1"
+        android:clipToPadding="true"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
