@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingBottom="@dimen/space_5dp">
+
+    <ImageView
+        android:id="@+id/imageView_flag"
+        android:layout_width="@dimen/space_32dp"
+        android:layout_height="@dimen/space_32dp"
+        tools:src="@drawable/ic_flag_ro"/>
+
+    <TextView
+        android:id="@+id/currency_coin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView_flag"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/imageView_flag"
+        android:layout_marginStart="@dimen/space_29dp"
+        tools:text="RON"
+        android:textSize="@dimen/text_20sp"
+        android:textColor="@color/colorBlack"
+        android:fontFamily="@font/roboto_normal"
+        android:gravity="center"/>
+</RelativeLayout>
