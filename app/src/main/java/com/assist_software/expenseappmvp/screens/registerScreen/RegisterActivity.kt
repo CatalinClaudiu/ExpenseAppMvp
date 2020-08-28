@@ -31,7 +31,6 @@ class RegisterActivity : Activity() {
     companion object {
         fun startRegisterActivity(activity: Activity) {
             val intent = Intent(activity, RegisterActivity::class.java)
-            //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             activity.startActivity(intent)
         }
     }
