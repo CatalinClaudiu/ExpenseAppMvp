@@ -10,9 +10,11 @@ class SplashView(var activity: SplashActivity) {
 
     fun showMainScreen() {
         MainActivity.start(activity)
+        activity.finish()
     }
 
     fun showLoginScreen(){
         LoginActivity.start(activity)
+        activity.finish()
     }
 }
