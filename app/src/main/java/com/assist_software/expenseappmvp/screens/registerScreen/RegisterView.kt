@@ -12,6 +12,7 @@ class RegisterView(var activity: RegisterActivity) {
 
     fun showLoginScreen() {
         LoginActivity.start(activity)
+        activity.finish()
     }
 
     fun goToLoginScreen(): Observable<Any> {
