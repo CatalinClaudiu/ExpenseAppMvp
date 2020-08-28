@@ -5,6 +5,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -73,6 +74,7 @@ dependencies {
     implementation 'com.github.trinnguyen:Android-SegmentView:master-SNAPSHOT'
 
     //Dependency Injection
+    implementation 'com.google.firebase:firebase-database:19.4.0'
     kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
     implementation "com.google.dagger:dagger:$rootProject.dagger"
     implementation "com.android.support:support-v4:$rootProject.support"
