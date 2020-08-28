@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "7163376253",
+    "firebase_url": "https://expensesapp-1287b.firebaseio.com",
+    "project_id": "expensesapp-1287b",
+    "storage_bucket": "expensesapp-1287b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:7163376253:android:67760a7860aeabf0f2f714",
+        "android_client_info": {
+          "package_name": "com.assist_software.expenseappmvp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "7163376253-3cmjeksls5nv5dg1oq9u0p4t68rb62sb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtUDS5AlxpRR7t4kA4PjxNnqQfDKQOi_o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "7163376253-3cmjeksls5nv5dg1oq9u0p4t68rb62sb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -22,11 +22,24 @@
 
         <activity
             android:name=".screens.mainScreen.MainActivity"
-            android:screenOrientation="portrait"/>
+            android:theme="@style/NoActionBarNoFullScreen"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"/>
 
         <activity
             android:name=".screens.loginScreen.LoginActivity"
-            android:screenOrientation="portrait"/>
+            android:theme="@style/NoActionBarNoFullScreen"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"/>
+
+        <activity
+            android:name=".screens.registerScreen.RegisterActivity"
+            android:theme="@style/NoActionBarNoFullScreen"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"/>
     </application>
 
 </manifest>

@@ -1,24 +1,23 @@
-package com.assist_software.expenseappmvp.screens.loginScreen
+package com.assist_software.expenseappmvp.screens.registerScreen
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.assist_software.expenseappmvp.application.ExpenseApp
 import javax.inject.Inject
 
-class LoginActivity : AppCompatActivity() {
+class RegisterActivity : Activity() {
 
     @Inject
-    lateinit var presenter: LoginPresenter
+    lateinit var presenter: RegisterPresenter
 
     @Inject
-    lateinit var view: LoginView
+    lateinit var view: RegisterView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerLoginComponent.builder().appComponent(ExpenseApp.appComponent(this))
-            .loginModule(LoginModule(this)).build().inject(this)
+        DaggerRegisterComponent.builder().appComponent(ExpenseApp.appComponent(this))
+            .registerModule(RegisterModule(this)).build().inject(this)
 
         setContentView(view.layout)
         presenter.onCreate()
@@ -30,8 +29,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     companion object {
-        fun start(activity: Context) {
-            val intent = Intent(activity, LoginActivity::class.java)
+        fun startRegisterActivity(activity: Activity) {
+            val intent = Intent(activity, RegisterActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             activity.startActivity(intent)
         }
