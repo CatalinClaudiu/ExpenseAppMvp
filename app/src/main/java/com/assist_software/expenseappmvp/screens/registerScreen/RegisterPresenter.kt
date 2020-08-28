@@ -18,7 +18,7 @@ class RegisterPresenter(
     private val user: User = User()
 
     fun onCreate() {
-        compositeDisposables.add(onLoginClick())
+        compositeDisposables.addAll(onLoginClick(), registerUser())
     }
 
     fun onDestroy() {
@@ -32,19 +32,18 @@ class RegisterPresenter(
                 view.showLoginScreen()
             }
     }
-//  !!!! ALERT !!!!! Codul asta ar fi fost pentru buton de register dar din ceva motiv simpla lui existenta freaca toata aplicatia
 
-//    private fun registerUser(): Disposable {
-//        return Observable.just(Constants.EMPTY)
-//            .observeOn(rxSchedulers.background())
-//            .flatMap {
-//                userRepository.savePrimaryUser(user).toObservable()
-//            }
-//            .observeOn(rxSchedulers.androidUI())
-//            .subscribe {
-//                view.showLoginScreen()
-//            }
-//    }
+    private fun registerUser(): Disposable {
+        return view.registerUser()
+            .observeOn(rxSchedulers.background())
+            .flatMap {
+                userRepository.savePrimaryUser(user).toObservable()
+            }
+            .observeOn(rxSchedulers.androidUI())
+            .subscribe {
+                view.showLoginScreen()
+            }
+    }
 
     companion object {
         const val THROTTLE_DURATION = 1L

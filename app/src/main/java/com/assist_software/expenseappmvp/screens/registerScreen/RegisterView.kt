@@ -17,4 +17,8 @@ class RegisterView(var activity: RegisterActivity) {
     fun goToLoginScreen(): Observable<Any> {
         return RxView.clicks(layout.login_textView_link)
     }
+
+    fun registerUser(): Observable<Any>{
+        return RxView.clicks(layout.btn_register)
+    }
 }
