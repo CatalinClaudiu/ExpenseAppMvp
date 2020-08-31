@@ -80,7 +80,7 @@ dependencies {
     implementation "com.android.support:exifinterface:$rootProject.support"
 
     //Firebase
-    implementation 'com.google.firebase:firebase-database:19.4.0'
+    implementation 'com.google.firebase:firebase-auth:19.3.2'
 
     //Data
     implementation 'com.google.code.gson:gson:2.8.5'

@@ -2,10 +2,14 @@ package com.assist_software.expenseappmvp.application
 
 import android.app.Application
 import android.content.Context
+import androidx.annotation.Nullable
 import com.assist_software.expenseappmvp.BuildConfig
 import com.assist_software.expenseappmvp.application.builder.AppComponent
 import com.assist_software.expenseappmvp.application.builder.AppModule
 import com.assist_software.expenseappmvp.application.builder.DaggerAppComponent
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import dagger.Provides
 import timber.log.Timber
 
 class ExpenseApp : Application(){

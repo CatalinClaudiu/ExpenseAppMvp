@@ -60,6 +60,7 @@
                 android:focusable="true"
                 android:fontFamily="@font/roboto_normal"
                 android:hint="@string/name"
+                android:text="Test Mobile"
                 android:inputType="textPersonName"
                 android:textColorHint="@color/colorGray"
                 android:textSize="@dimen/text_16sp" />
@@ -87,6 +88,7 @@
                 android:focusable="true"
                 android:fontFamily="@font/roboto_normal"
                 android:hint="@string/email"
+                android:text="test_mobile@gmail.com"
                 android:inputType="textEmailAddress"
                 android:textColorHint="@color/colorGray"
                 android:textSize="@dimen/text_16sp" />
@@ -117,6 +119,7 @@
                 android:focusable="true"
                 android:fontFamily="@font/roboto_normal"
                 android:hint="@string/password"
+                android:text="Parola123#"
                 android:inputType="textPassword"
                 android:textColorHint="@color/colorGray"
                 android:textSize="@dimen/text_16sp" />
