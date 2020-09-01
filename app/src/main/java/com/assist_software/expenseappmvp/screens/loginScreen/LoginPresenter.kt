@@ -61,7 +61,7 @@ class LoginPresenter(
             }
             .subscribe({
                 val userId = userRepository.getUserId(user.userEmail)
-                sharedPref.write(Constants.USER_ID, userId)
+                userId.doOnSuccess { userId -> sharedPref.write(Constants.USER_ID, userId) }
                 view.showMainScreen()
             }, {
                 Timber.i(it.localizedMessage)

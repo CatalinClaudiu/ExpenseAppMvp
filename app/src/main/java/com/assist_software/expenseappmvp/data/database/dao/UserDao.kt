@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.assist_software.expenseappmvp.data.database.entities.User
 import io.reactivex.Flowable
+import io.reactivex.Single
 
 @Dao
 interface UserDao {
@@ -21,6 +22,6 @@ interface UserDao {
     @Query("DELETE FROM users WHERE userId = :id")
     fun deleteUser(id: Long = 0)
 
-    @Query("SELECT userId FROM users WHERE userEmail = :email LIMIT 1")
-    fun getUserIdByEmail(email: String): Long
+    @Query("SELECT userId FROM users WHERE userEmail = :email")
+    fun getUserIdByEmail(email: String): Single<Long>
 }
