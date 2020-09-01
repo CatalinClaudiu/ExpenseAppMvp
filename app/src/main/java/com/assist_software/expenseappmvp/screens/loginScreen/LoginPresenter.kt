@@ -1,7 +1,5 @@
 package com.assist_software.expenseappmvp.screens.loginScreen
 
-import android.widget.Toast
-import com.assist_software.expenseappmvp.R
 import com.assist_software.expenseappmvp.data.database.entities.User
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.Constants
@@ -64,12 +62,12 @@ class LoginPresenter(
     private fun signInUserFromFirebase(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { p0 ->
-                if (p0.isSuccessful) { Toast.makeText(view.activity, view.activity.getString(R.string.login_success), Toast.LENGTH_LONG).show()
+                if (p0.isSuccessful) {
                     saveUserInPreferences(email)
                 } else {
                     Timber.e(p0.result.toString())
-                    Toast.makeText(view.activity, view.activity.getString(R.string.login_failed), Toast.LENGTH_LONG).show()
                 }
+                view.showMessage(p0.isSuccessful)
             }
     }
 

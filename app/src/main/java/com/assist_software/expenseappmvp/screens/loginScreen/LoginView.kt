@@ -2,6 +2,7 @@ package com.assist_software.expenseappmvp.screens.loginScreen
 
 import android.graphics.Color
 import android.view.View
+import android.widget.Toast
 import com.assist_software.expenseappmvp.R
 import com.assist_software.expenseappmvp.data.database.entities.User
 import com.assist_software.expenseappmvp.screens.mainScreen.MainActivity
@@ -38,6 +39,14 @@ class LoginView(var activity: LoginActivity) {
 
     fun inputUserPassword(): Observable<CharSequence> {
         return RxTextView.textChanges(layout.edit_text_password_login).skipInitialValue()
+    }
+
+    fun showMessage(isSuccess: Boolean){
+        val message =
+            if (isSuccess) activity.resources.getString(R.string.login_success) else activity.resources.getString(
+                R.string.login_failed
+            )
+        Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 
     fun fieldValidation(user: User) {
