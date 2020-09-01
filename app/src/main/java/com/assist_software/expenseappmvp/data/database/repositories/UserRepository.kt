@@ -25,4 +25,8 @@ class UserRepository(private val db: AppDatabase) {
     fun removeUser(id: Long): Flowable<Any> {
         return Flowable.just(db.userDao().deleteUser(id))
     }
+
+    fun getUserId(email: String): Long{
+        return db.userDao().getUserIdByEmail(email)
+    }
 }

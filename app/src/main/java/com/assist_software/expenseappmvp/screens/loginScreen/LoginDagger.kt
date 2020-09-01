@@ -3,6 +3,8 @@ package com.assist_software.expenseappmvp.screens.loginScreen
 import com.assist_software.expenseappmvp.application.builder.AppComponent
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
+import com.assist_software.expenseappmvp.utils.SharedPrefUtils
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -33,9 +35,11 @@ class LoginModule(private val activity: LoginActivity) {
     fun presenter(
         view: LoginView,
         rxSchedulers: RxSchedulers,
+        sharedPref: SharedPrefUtils,
+        auth: FirebaseAuth,
         userRepository: UserRepository
     ): LoginPresenter {
         val compositeDisposable = CompositeDisposable()
-        return LoginPresenter(view, rxSchedulers, userRepository, compositeDisposable)
+        return LoginPresenter(view, rxSchedulers, userRepository, auth, sharedPref, compositeDisposable)
     }
 }

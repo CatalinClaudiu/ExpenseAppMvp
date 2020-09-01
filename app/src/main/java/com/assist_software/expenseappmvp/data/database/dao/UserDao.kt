@@ -20,4 +20,7 @@ interface UserDao {
 
     @Query("DELETE FROM users WHERE userId = :id")
     fun deleteUser(id: Long = 0)
+
+    @Query("SELECT userId FROM users WHERE userEmail = :email LIMIT 1")
+    fun getUserIdByEmail(email: String): Long
 }

@@ -16,6 +16,10 @@ class SharedPrefUtils(private val context: Context) {
         return sharedPref.getInt(key, value)
     }
 
+    fun read(key: String, value: Long): Long {
+        return sharedPref.getLong(key, value)
+    }
+
     fun write(key: String, value: String) {
         val editor: SharedPreferences.Editor = sharedPref.edit()
         editor.putString(key, value)
@@ -25,6 +29,12 @@ class SharedPrefUtils(private val context: Context) {
     fun write(key: String, value: Int) {
         val editor: SharedPreferences.Editor = sharedPref.edit()
         editor.putInt(key, value)
+        editor.apply()
+    }
+
+    fun write(key: String, value: Long) {
+        val editor: SharedPreferences.Editor = sharedPref.edit()
+        editor.putLong(key, value)
         editor.apply()
     }
 

@@ -63,7 +63,6 @@ class RegisterPresenter(
                 sharedPref.write(Constants.USER_NAME, user.userName)
                 userRepository.savePrimaryUser(user)
                 registerUserToFirebase(user.userEmail, user.userPassword)
-                sharedPref
             }
             .subscribe({
                 view.showLoginScreen()
