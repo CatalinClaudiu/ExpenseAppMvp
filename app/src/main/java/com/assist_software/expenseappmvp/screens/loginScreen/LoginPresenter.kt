@@ -57,11 +57,11 @@ class LoginPresenter(
                 !(user.userEmail == "" || user.userPassword == "")
             }
             .doOnNext {
-                val userId = userRepository.getUserId(user.userEmail)
-                sharedPref.write(Constants.USER_ID, userId)
                 signInUserFromFirebase(user.userEmail, user.userPassword)
             }
             .subscribe({
+                val userId = userRepository.getUserId(user.userEmail)
+                sharedPref.write(Constants.USER_ID, userId)
                 view.showMainScreen()
             }, {
                 Timber.i(it.localizedMessage)

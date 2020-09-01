@@ -61,10 +61,10 @@ class RegisterPresenter(
             }
             .doOnNext {
                 sharedPref.write(Constants.USER_NAME, user.userName)
-                userRepository.savePrimaryUser(user)
                 registerUserToFirebase(user.userEmail, user.userPassword)
             }
             .subscribe({
+                userRepository.savePrimaryUser(user)
                 view.showLoginScreen()
             }, {
                 Timber.i(it.localizedMessage)
