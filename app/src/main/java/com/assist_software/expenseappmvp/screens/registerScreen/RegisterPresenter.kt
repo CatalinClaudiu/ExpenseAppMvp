@@ -1,48 +1,24 @@
 package com.assist_software.expenseappmvp.screens.registerScreen
 
-import android.graphics.Color
-import android.widget.Toast
-import com.assist_software.expenseappmvp.R
 import com.assist_software.expenseappmvp.data.database.entities.User
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
-import com.assist_software.expenseappmvp.utils.SharedPrefUtils
 import com.assist_software.expenseappmvp.utils.Validations
 import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.activity_register.view.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
-
 
 class RegisterPresenter(
     private val view: RegisterView,
     private val rxSchedulers: RxSchedulers,
     private val userRepository: UserRepository,
     private val auth: FirebaseAuth,
-    private val sharedPref: SharedPrefUtils,
     private val compositeDisposables: CompositeDisposable
 ) {
     private val user: User = User()
-
-    fun onCreate() {
-        compositeDisposables.addAll(
-            onLoginClick(),
-            registerUser(),
-            getUserName(),
-            getUserEmail(),
-            getUserPassword()
-        )
-
-        val user = auth.currentUser
-        Timber.e("${user?.email}")
-    }
-
-    fun onDestroy() {
-        compositeDisposables.clear()
-    }
 
     private fun onLoginClick(): Disposable {
         return view.goToLoginScreen()
@@ -55,17 +31,12 @@ class RegisterPresenter(
     private fun registerUser(): Disposable {
         return view.registerUserClick()
             .observeOn(rxSchedulers.androidUI())
-            .doOnNext { fieldValidation() }
+            .doOnNext { view.fieldValidation(user) }
             .filter {
                 !(user.userName == "" || user.userEmail == "" || user.userPassword == "")
             }
-            .doOnNext {
-                sharedPref.write(Constants.USER_NAME, user.userName)
-                registerUserToFirebase(user.userEmail, user.userPassword)
-            }
             .subscribe({
-                userRepository.savePrimaryUser(user)
-                view.showLoginScreen()
+                registerUserToFirebase(user.userEmail, user.userPassword)
             }, {
                 Timber.i(it.localizedMessage)
             })
@@ -99,41 +70,27 @@ class RegisterPresenter(
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { p0 ->
                 if (p0.isSuccessful) {
-                    Toast.makeText(
-                        view.activity,
-                        view.activity.getString(R.string.registred_success),
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
-
-                    auth.signOut()
+                    userRepository.savePrimaryUser(user.apply { uid = p0.result!!.user!!.uid })
+                    view.showLoginScreen()
                 } else {
                     Timber.e(p0.result.toString())
-                    Toast.makeText(
-                        view.activity,
-                        view.activity.getString(R.string.registred_failed),
-                        Toast.LENGTH_LONG
-                    ).show()
                 }
+                view.showMessage(p0.isSuccessful)
             }
     }
 
-    private fun fieldValidation() {
-        if (user.userName == "") {
-            view.layout.text_input_name.setBackgroundColor(Color.RED)
-        } else {
-            view.layout.text_input_name.setBackgroundColor(Color.WHITE)
-        }
-        if (user.userEmail == "") {
-            view.layout.text_input_email.setBackgroundColor(Color.RED)
-        } else {
-            view.layout.text_input_email.setBackgroundColor(Color.WHITE)
-        }
-        if (user.userPassword == "") {
-            view.layout.text_input_password.setBackgroundColor(Color.RED)
-        } else {
-            view.layout.text_input_password.setBackgroundColor(Color.WHITE)
-        }
+    fun onCreate() {
+        compositeDisposables.addAll(
+            onLoginClick(),
+            registerUser(),
+            getUserName(),
+            getUserEmail(),
+            getUserPassword()
+        )
+    }
+
+    fun onDestroy() {
+        compositeDisposables.clear()
     }
 
     companion object {

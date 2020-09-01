@@ -91,6 +91,8 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$rootProject.arch"
     implementation "android.arch.lifecycle:reactivestreams:$rootProject.arch"
     implementation 'com.fatboyindustrial.gson-jodatime-serialisers:gson-jodatime-serialisers:1.2.0'
+    //Stetho
+    implementation 'com.facebook.stetho:stetho:1.5.1'
 
     //Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'

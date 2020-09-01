@@ -40,8 +40,7 @@ class RegisterModule(private val activity: RegisterActivity) {
         view: RegisterView,
         rxSchedulers: RxSchedulers,
         userRepository: UserRepository,
-        auth: FirebaseAuth,
-        sharedPref: SharedPrefUtils
+        auth: FirebaseAuth
     ): RegisterPresenter {
         val compositeDisposable = CompositeDisposable()
         return RegisterPresenter(
@@ -49,7 +48,6 @@ class RegisterModule(private val activity: RegisterActivity) {
             rxSchedulers,
             userRepository,
             auth,
-            sharedPref,
             compositeDisposable
         )
     }

@@ -6,6 +6,7 @@ import com.assist_software.expenseappmvp.BuildConfig
 import com.assist_software.expenseappmvp.application.builder.AppComponent
 import com.assist_software.expenseappmvp.application.builder.AppModule
 import com.assist_software.expenseappmvp.application.builder.DaggerAppComponent
+import com.facebook.stetho.Stetho
 import timber.log.Timber
 
 class ExpenseApp : Application() {
@@ -13,6 +14,7 @@ class ExpenseApp : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        Stetho.initializeWithDefaults(this)
         initComponent()
         initTimber()
     }
@@ -28,15 +30,15 @@ class ExpenseApp : Application() {
             return it
         } ?: kotlin.run {
             return DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .build()
+                    .appModule(AppModule(this))
+                    .build()
         }
     }
 
     private fun initComponent() {
         appComponent = DaggerAppComponent.builder()
-            .appModule(AppModule(this))
-            .build()
+                .appModule(AppModule(this))
+                .build()
     }
 
     companion object {

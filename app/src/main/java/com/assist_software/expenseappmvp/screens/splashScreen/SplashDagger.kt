@@ -4,7 +4,6 @@ import com.assist_software.expenseappmvp.application.builder.AppComponent
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
 import com.assist_software.expenseappmvp.utils.SharedPrefUtils
-import com.google.firebase.auth.FirebaseAuth
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -34,6 +33,6 @@ class SplashModule(private val activity: SplashActivity) {
     @SplashScope
     fun presenter(view: SplashView, rxSchedulers: RxSchedulers, userRepository: UserRepository, asharedPref: SharedPrefUtils): SplashPresenter {
         val compositeDisposable = CompositeDisposable()
-        return SplashPresenter(view, rxSchedulers, userRepository, asharedPref, compositeDisposable)
+        return SplashPresenter(view, rxSchedulers, asharedPref, compositeDisposable)
     }
 }

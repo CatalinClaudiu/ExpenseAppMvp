@@ -32,7 +32,7 @@
         android:layout_marginTop="@dimen/space_34dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_input_email"
+        android:id="@+id/text_input_email_login"
         android:layout_width="@dimen/space_0dp"
         android:layout_height="@dimen/space_56dp"
         android:paddingStart="@dimen/space_16dp"
@@ -46,7 +46,7 @@
         android:focusable="false">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_text_email"
+            android:id="@+id/edit_text_email_login"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/email"
@@ -60,7 +60,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_input_password"
+        android:id="@+id/text_input_password_login"
         android:layout_width="@dimen/space_0dp"
         android:layout_height="wrap_content"
         app:passwordToggleEnabled="true"
@@ -72,12 +72,12 @@
         android:layout_marginTop="@dimen/space_30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_input_email"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_email_login"
         app:layout_constraintWidth_percent="0.8"
         android:focusable="false">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_text_password"
+            android:id="@+id/edit_text_password_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
@@ -100,7 +100,7 @@
         android:fontFamily="@font/montserrat_regular"
         android:textSize="@dimen/text_16sp"
         android:textColor="@color/colorWhite"
-        app:layout_constraintTop_toBottomOf="@+id/text_input_password"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_password_login"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.4"
