@@ -12,9 +12,9 @@
     <string name="register_text">Let us know more about you</string>
     <string name="name">Name</string>
     <string name="have_account">Have already an account?</string>
-    <string name="wrong_name">Name wrong</string>
-    <string name="wrong_email">Email address wrong</string>
-    <string name="wrong_password">Password wrong</string>
+    <string name="wrong_name">Insert First Name and Last Name</string>
+    <string name="wrong_email">Insert a valid Email Address</string>
+    <string name="wrong_password">Password must have: upper case letter, lower case letter, number, special characters and must be at least 6 characters long</string>
     <string name="main_page">Main page</string>
     <string name="converter">Converter</string>
     <string name="logout">Logout</string>
@@ -64,4 +64,7 @@
     <string name="dodgy_api_date">Converted using SDA (SOME DODGY API) at date %1s</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
+    <string name="wrong_data">Wrong data inserted</string>
+    <string name="registred_success">Successfully Registered</string>
+    <string name="registred_failed">Registration Failed</string>
 </resources>
