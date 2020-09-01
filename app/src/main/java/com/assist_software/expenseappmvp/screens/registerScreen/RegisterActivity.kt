@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import com.assist_software.expenseappmvp.application.ExpenseApp
-import com.assist_software.expenseappmvp.application.builder.DatabaseServiceModule
 import javax.inject.Inject
 
 class RegisterActivity : Activity() {

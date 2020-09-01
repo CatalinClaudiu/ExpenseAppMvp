@@ -7,8 +7,8 @@ import com.assist_software.expenseappmvp.data.database.entities.User
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
+import com.assist_software.expenseappmvp.utils.SharedPrefUtils
 import com.assist_software.expenseappmvp.utils.Validations
-import com.example.spendwithbrain.utils.SharedPrefUtils
 import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -22,9 +22,9 @@ class RegisterPresenter(
     private val rxSchedulers: RxSchedulers,
     private val userRepository: UserRepository,
     private val auth: FirebaseAuth,
+    private val sharedPref: SharedPrefUtils,
     private val compositeDisposables: CompositeDisposable
 ) {
-
     private val user: User = User()
 
     fun onCreate() {
@@ -56,14 +56,17 @@ class RegisterPresenter(
         return view.registerUserClick()
             .observeOn(rxSchedulers.androidUI())
             .doOnNext { fieldValidation() }
-            .filter { !(user.userName == "" || user.userEmail == "" || user.userPassword == "") }
+            .filter {
+                !(user.userName == "" || user.userEmail == "" || user.userPassword == "")
+            }
             .doOnNext {
-                SharedPrefUtils.write(Constants.USER_NAME, user.userName)
+                sharedPref.write(Constants.USER_NAME, user.userName)
                 userRepository.savePrimaryUser(user)
                 registerUserToFirebase(user.userEmail, user.userPassword)
+                sharedPref
             }
             .subscribe({
-                view.showMainScreen()
+                view.showLoginScreen()
             }, {
                 Timber.i(it.localizedMessage)
             })
@@ -97,11 +100,21 @@ class RegisterPresenter(
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { p0 ->
                 if (p0.isSuccessful) {
-                    Toast.makeText(view.activity, view.activity.getString(R.string.registred_success), Toast.LENGTH_LONG)
+                    Toast.makeText(
+                        view.activity,
+                        view.activity.getString(R.string.registred_success),
+                        Toast.LENGTH_LONG
+                    )
                         .show()
+
+                    auth.signOut()
                 } else {
                     Timber.e(p0.result.toString())
-                    Toast.makeText(view.activity, view.activity.getString(R.string.registred_failed), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        view.activity,
+                        view.activity.getString(R.string.registred_failed),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
     }

@@ -1,15 +1,12 @@
-package com.example.spendwithbrain.utils
+package com.assist_software.expenseappmvp.utils
 
 import android.content.Context
 import android.content.SharedPreferences
 import com.assist_software.expenseappmvp.data.utils.Constants
 
-object SharedPrefUtils {
-    private lateinit var sharedPref: SharedPreferences
-
-    fun init(context: Context){
-        sharedPref = context.getSharedPreferences(Constants.MY_SHARED_PREFERENCE, Context.MODE_PRIVATE)
-    }
+class SharedPrefUtils(private val context: Context) {
+    private val sharedPref =
+        context.getSharedPreferences(Constants.MY_SHARED_PREFERENCE, Context.MODE_PRIVATE)
 
     fun read(key: String, value: String): String? {
         return sharedPref.getString(key, value)
@@ -25,17 +22,17 @@ object SharedPrefUtils {
         editor.apply()
     }
 
-    fun write(key: String, value: Int){
+    fun write(key: String, value: Int) {
         val editor: SharedPreferences.Editor = sharedPref.edit()
         editor.putInt(key, value)
         editor.apply()
     }
 
-    fun hasKey(key: String): Boolean{
+    fun hasKey(key: String): Boolean {
         return sharedPref.contains(key)
     }
 
-    fun clear(){
+    fun clear() {
         val editor: SharedPreferences.Editor = sharedPref.edit()
         editor.clear()
         editor.apply()

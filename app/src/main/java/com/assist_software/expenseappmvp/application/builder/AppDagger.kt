@@ -5,6 +5,7 @@ import com.assist_software.expenseappmvp.data.database.AppDatabase
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.rx.RxBus
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
+import com.assist_software.expenseappmvp.utils.SharedPrefUtils
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Component
 import dagger.Module
@@ -27,8 +28,10 @@ class AppModule(private val context: Context) {
 }
 
 @AppScope
-@Component(modules = [(AppModule::class), (DatabaseServiceModule::class), (RxModule::class),
-    (RestServiceModule::class), (GsonModule::class), (NetworkModule::class),(FirebaseAuthModule::class)])
+@Component(
+    modules = [(AppModule::class), (DatabaseServiceModule::class), (RxModule::class),
+        (RestServiceModule::class), (GsonModule::class), (NetworkModule::class), (FirebaseAuthModule::class), (SharedPrefModule::class)]
+)
 interface AppComponent {
 
     fun context(): Context
@@ -43,5 +46,7 @@ interface AppComponent {
 
     fun userRepository(): UserRepository
 
-    fun getAuth():FirebaseAuth
+    fun getAuth(): FirebaseAuth
+
+    fun initSharedPref(): SharedPrefUtils
 }

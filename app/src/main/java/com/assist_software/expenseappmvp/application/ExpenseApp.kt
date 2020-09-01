@@ -2,17 +2,13 @@ package com.assist_software.expenseappmvp.application
 
 import android.app.Application
 import android.content.Context
-import androidx.annotation.Nullable
 import com.assist_software.expenseappmvp.BuildConfig
 import com.assist_software.expenseappmvp.application.builder.AppComponent
 import com.assist_software.expenseappmvp.application.builder.AppModule
 import com.assist_software.expenseappmvp.application.builder.DaggerAppComponent
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import dagger.Provides
 import timber.log.Timber
 
-class ExpenseApp : Application(){
+class ExpenseApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -29,18 +25,18 @@ class ExpenseApp : Application(){
 
     private fun getAppComponent(): AppComponent {
         appComponent?.let {
-             return it
+            return it
         } ?: kotlin.run {
-             return DaggerAppComponent.builder()
-                    .appModule(AppModule(this))
-                    .build()
+            return DaggerAppComponent.builder()
+                .appModule(AppModule(this))
+                .build()
         }
     }
 
     private fun initComponent() {
         appComponent = DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .build()
+            .appModule(AppModule(this))
+            .build()
     }
 
     companion object {

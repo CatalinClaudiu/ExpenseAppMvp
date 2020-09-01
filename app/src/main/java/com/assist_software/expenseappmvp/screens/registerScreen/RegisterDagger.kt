@@ -1,9 +1,9 @@
 package com.assist_software.expenseappmvp.screens.registerScreen
 
 import com.assist_software.expenseappmvp.application.builder.AppComponent
-import com.assist_software.expenseappmvp.application.builder.DatabaseServiceModule
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
+import com.assist_software.expenseappmvp.utils.SharedPrefUtils
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Component
 import dagger.Module
@@ -40,9 +40,17 @@ class RegisterModule(private val activity: RegisterActivity) {
         view: RegisterView,
         rxSchedulers: RxSchedulers,
         userRepository: UserRepository,
-        auth:FirebaseAuth
+        auth: FirebaseAuth,
+        sharedPref: SharedPrefUtils
     ): RegisterPresenter {
         val compositeDisposable = CompositeDisposable()
-        return RegisterPresenter(view, rxSchedulers, userRepository,auth, compositeDisposable)
+        return RegisterPresenter(
+            view,
+            rxSchedulers,
+            userRepository,
+            auth,
+            sharedPref,
+            compositeDisposable
+        )
     }
 }
