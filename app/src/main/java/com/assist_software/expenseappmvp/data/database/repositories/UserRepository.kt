@@ -4,6 +4,7 @@ import com.assist_software.expenseappmvp.data.database.AppDatabase
 import com.assist_software.expenseappmvp.data.database.entities.User
 import com.assist_software.expenseappmvp.data.utils.Constants
 import io.reactivex.Flowable
+import io.reactivex.Single
 
 class UserRepository(private val db: AppDatabase) {
 
@@ -24,5 +25,9 @@ class UserRepository(private val db: AppDatabase) {
 
     fun removeUser(id: Long): Flowable<Any> {
         return Flowable.just(db.userDao().deleteUser(id))
+    }
+
+    fun getUserId(email: String): Single<Long>{
+        return db.userDao().getUserIdByEmail(email)
     }
 }

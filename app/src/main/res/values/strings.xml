@@ -67,4 +67,6 @@
     <string name="wrong_data">Wrong data inserted</string>
     <string name="registred_success">Successfully Registered</string>
     <string name="registred_failed">Registration Failed</string>
+    <string name="login_success">Successfully Login</string>
+    <string name="login_failed">Login Failed</string>
 </resources>
