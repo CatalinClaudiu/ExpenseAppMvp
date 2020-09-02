@@ -8,6 +8,7 @@ import com.assist_software.expenseappmvp.screens.registerScreen.RegisterPresente
 import com.assist_software.expenseappmvp.utils.SharedPrefUtils
 import com.assist_software.expenseappmvp.utils.Validations
 import com.google.firebase.auth.FirebaseAuth
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
@@ -36,9 +37,8 @@ class LoginPresenter(
             .filter {
                 !(user.userEmail == "" || user.userPassword == "")
             }
-            .subscribe({
-                signInUserFromFirebase(user.userEmail, user.userPassword)
-            }, {
+            .observeOn(rxSchedulers.background())
+            .subscribe({ signInUserFromFirebase(user.userEmail, user.userPassword) }, {
                 Timber.i(it.localizedMessage)
             })
     }
@@ -60,15 +60,18 @@ class LoginPresenter(
     }
 
     private fun signInUserFromFirebase(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { p0 ->
-                if (p0.isSuccessful) {
-                    saveUserInPreferences(email)
-                } else {
-                    Timber.e(p0.result.toString())
-                }
-                view.showMessage(p0.isSuccessful)
-            }
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { p0 ->
+            Observable.just(p0)
+                .observeOn(rxSchedulers.androidUI())
+                .subscribe({
+                    if (p0.isSuccessful) {
+                        saveUserInPreferences(email)
+                    }
+                    view.showMessage(p0.isSuccessful)
+                }, {
+                    Timber.e(it.localizedMessage)
+                })
+        }
     }
 
     private fun saveUserInPreferences(email: String): Disposable? {

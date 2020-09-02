@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.Toast
 import com.assist_software.expenseappmvp.R
 import com.assist_software.expenseappmvp.data.database.entities.User
-import com.assist_software.expenseappmvp.screens.mainScreen.MainActivity
+import com.assist_software.expenseappmvp.screens.mainScreen.HomeActivity
 import com.assist_software.expenseappmvp.screens.registerScreen.RegisterActivity
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -25,7 +25,7 @@ class LoginView(var activity: LoginActivity) {
     }
 
     fun showMainScreen() {
-        MainActivity.start(activity)
+        HomeActivity.start(activity)
         activity.finish()
     }
 
