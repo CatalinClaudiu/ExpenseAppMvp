@@ -3,6 +3,7 @@ package com.assist_software.expenseappmvp.screens.mainScreen
 import com.assist_software.expenseappmvp.application.builder.AppComponent
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
+import com.assist_software.expenseappmvp.utils.SharedPrefUtils
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -36,6 +37,7 @@ class HomeModule(private val activity: HomeActivity) {
     fun presenter(
         view: HomeView,
         rxSchedulers: RxSchedulers,
+        sharedPref: SharedPrefUtils,
         userRepository: UserRepository
     ): HomePresenter {
         val compositeDisposable = CompositeDisposable()
@@ -43,6 +45,7 @@ class HomeModule(private val activity: HomeActivity) {
             view,
             rxSchedulers,
             userRepository,
+            sharedPref,
             compositeDisposable
         )
     }
