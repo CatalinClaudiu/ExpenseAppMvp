@@ -10,18 +10,15 @@ import io.reactivex.Single
 
 @Dao
 interface UserDao {
-    @Query("SELECT * FROM users WHERE userId = :id LIMIT 1")
-    fun getUserById(id: Long = 0): Flowable<List<User>>
+    @Query("SELECT * FROM users WHERE uid = :id ")
+    fun getUserById(id: String): Flowable<User>
 
-    @Query("SELECT * FROM users WHERE userEmail = :email LIMIT 1")
-    fun getUserByEmail(email: String): Flowable<List<User>>
+    @Query("SELECT * FROM users WHERE userEmail = :email")
+    fun getUserByEmail(email: String): Flowable<User>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveUser(user: User)
 
-    @Query("DELETE FROM users WHERE userId = :id")
-    fun deleteUser(id: Long = 0)
-
-    @Query("SELECT userId FROM users WHERE userEmail = :email")
-    fun getUserIdByEmail(email: String): Single<Long>
+    @Query("SELECT uid FROM users WHERE userEmail = :email")
+    fun getUserIdByEmail(email: String): Single<String>
 }

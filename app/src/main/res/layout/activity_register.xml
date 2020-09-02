@@ -39,7 +39,7 @@
             app:layout_constraintTop_toBottomOf="@+id/login_logo" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_name"
+            android:id="@+id/text_input_name_register"
             android:layout_width="@dimen/space_0dp"
             android:layout_height="@dimen/space_56dp"
             android:layout_marginTop="@dimen/space_25dp"
@@ -53,21 +53,20 @@
             app:layout_constraintWidth_percent="0.8">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_text_name"
+                android:id="@+id/edit_text_name_register"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
                 android:focusable="true"
                 android:fontFamily="@font/roboto_normal"
                 android:hint="@string/name"
-                android:text="Test Mobile"
                 android:inputType="textPersonName"
                 android:textColorHint="@color/colorGray"
                 android:textSize="@dimen/text_16sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_email"
+            android:id="@+id/text_input_email_register"
             android:layout_width="@dimen/space_0dp"
             android:layout_height="@dimen/space_56dp"
             android:layout_marginTop="@dimen/space_25dp"
@@ -77,25 +76,24 @@
             android:paddingEnd="@dimen/space_16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_input_name_register"
             app:layout_constraintWidth_percent="0.8">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_text_email"
+                android:id="@+id/edit_text_email_register"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
                 android:focusable="true"
                 android:fontFamily="@font/roboto_normal"
                 android:hint="@string/email"
-                android:text="test_mobile@gmail.com"
                 android:inputType="textEmailAddress"
                 android:textColorHint="@color/colorGray"
                 android:textSize="@dimen/text_16sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_password"
+            android:id="@+id/text_input_password_register"
             android:layout_width="@dimen/space_0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_25dp"
@@ -105,21 +103,20 @@
             android:paddingEnd="@dimen/space_5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_email"
+            app:layout_constraintTop_toBottomOf="@+id/text_input_email_register"
             app:layout_constraintWidth_percent="0.8"
             app:passwordToggleDrawable="@drawable/password_visibility_selector"
             app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/colorGreen">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_text_password"
+                android:id="@+id/edit_text_password_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:focusable="true"
                 android:fontFamily="@font/roboto_normal"
                 android:hint="@string/password"
-                android:text="Parola123#"
                 android:inputType="textPassword"
                 android:textColorHint="@color/colorGray"
                 android:textSize="@dimen/text_16sp" />
@@ -138,7 +135,7 @@
             android:textSize="@dimen/text_18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_password"
+            app:layout_constraintTop_toBottomOf="@+id/text_input_password_register"
             app:layout_constraintWidth_percent="0.4" />
 
         <TextView

@@ -12,22 +12,7 @@ class UserRepository(private val db: AppDatabase) {
         return Flowable.just(db.userDao().saveUser(user))
     }
 
-    fun getUser(id: Long): Flowable<Any> {
-        return db.userDao().getUserById(id)
-                .flatMap {
-                    if (it.isEmpty()) {
-                        Flowable.just(Constants.EMPTY)
-                    } else {
-                        Flowable.just(it.first())
-                    }
-                }
-    }
-
-    fun removeUser(id: Long): Flowable<Any> {
-        return Flowable.just(db.userDao().deleteUser(id))
-    }
-
-    fun getUserId(email: String): Single<Long>{
+    fun getUserId(email: String): Single<String> {
         return db.userDao().getUserIdByEmail(email)
     }
 }
