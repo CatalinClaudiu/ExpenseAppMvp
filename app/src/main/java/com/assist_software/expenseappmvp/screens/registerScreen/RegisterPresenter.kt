@@ -5,7 +5,9 @@ import com.assist_software.expenseappmvp.data.database.repositories.UserReposito
 import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
 import com.assist_software.expenseappmvp.utils.Validations
+import com.assist_software.expenseappmvp.utils.disposeBy
 import com.google.firebase.auth.FirebaseAuth
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
@@ -35,9 +37,8 @@ class RegisterPresenter(
             .filter {
                 !(user.userName == "" || user.userEmail == "" || user.userPassword == "")
             }
-            .subscribe({
-                registerUserToFirebase(user.userEmail, user.userPassword)
-            }, {
+            .observeOn(rxSchedulers.background())
+            .subscribe({ registerUserToFirebase(user.userEmail, user.userPassword) }, {
                 Timber.i(it.localizedMessage)
             })
     }
@@ -67,16 +68,21 @@ class RegisterPresenter(
     }
 
     private fun registerUserToFirebase(email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { p0 ->
-                if (p0.isSuccessful) {
-                    userRepository.savePrimaryUser(user.apply { uid = p0.result!!.user!!.uid })
-                    view.showLoginScreen()
-                } else {
-                    Timber.e(p0.result.toString())
-                }
-                view.showMessage(p0.isSuccessful)
-            }
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { p0 ->
+            Observable.just(p0)
+                .observeOn(rxSchedulers.androidUI())
+                .subscribe({
+                    if (p0.isSuccessful) {
+                        userRepository.savePrimaryUser(user.apply { uid = p0.result!!.user!!.uid })
+                            .subscribe {
+                                view.showLoginScreen()
+                            }.disposeBy(compositeDisposables)
+                    }
+                    view.showMessage(it.isSuccessful)
+                }, {
+                    Timber.e(it.localizedMessage)
+                })
+        }
     }
 
     fun onCreate() {
