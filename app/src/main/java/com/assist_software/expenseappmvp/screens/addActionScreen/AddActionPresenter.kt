@@ -3,10 +3,14 @@ package com.assist_software.expenseappmvp.screens.addActionScreen
 import android.Manifest
 import android.widget.Toast
 import com.assist_software.expenseappmvp.R
+import com.assist_software.expenseappmvp.data.database.repositories.ExpenseRepository
+import com.assist_software.expenseappmvp.data.database.repositories.IncomeRepository
+import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
 import com.assist_software.expenseappmvp.screens.addActionScreen.adapter.models.CategoryItem
 import com.assist_software.expenseappmvp.screens.addActionScreen.enum.CategoryEnum
+import com.assist_software.expenseappmvp.utils.SharedPrefUtils
 import com.assist_software.expenseappmvp.utils.disposeBy
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.disposables.CompositeDisposable
@@ -19,9 +23,14 @@ class AddActionPresenter(
     private val view: AddActionView,
     private val rxSchedulers: RxSchedulers,
     private val rxPermissions: RxPermissions,
+    private val userRepository: UserRepository,
+    private val incomeRepository: IncomeRepository,
+    private val expenseRepository: ExpenseRepository,
+    private val sharedPref: SharedPrefUtils,
     private val compositeDisposables: CompositeDisposable
 ) {
     private val onItemClick = PublishSubject.create<CategoryItem>()
+    private var categorySelected: String = view.activity.getString(R.string.income)
 
     fun onCreate() {
         itemClickAction()
@@ -31,7 +40,8 @@ class AddActionPresenter(
             takePhoto(),
             deletePhoto(),
             cameraPermission(),
-            localStoragePermission()
+            localStoragePermission(),
+            saveTransactionToDB()
         )
     }
 
@@ -42,9 +52,7 @@ class AddActionPresenter(
     private fun itemClickAction() {
         onItemClick.observeOn(rxSchedulers.androidUI())
             .subscribe({ item ->
-                Toast.makeText(view.activity,
-                    "Item clicked: " + item.categoryName,
-                    Toast.LENGTH_SHORT).show()
+                categorySelected = item.categoryName.toLowerCase().capitalize()
             }, {
                 Timber.i(it.localizedMessage)
             })
@@ -120,5 +128,30 @@ class AddActionPresenter(
             .subscribe {
                 view.removePhotoFromImageView()
             }
+    }
+
+    private fun saveTransactionToDB(): Disposable{
+        return view.onSaveClick()
+            .throttleFirst(Constants.THROTTLE_DURATION, TimeUnit.SECONDS)
+            .subscribe({
+                if(categorySelected == view.activity.getString(R.string.income)){
+                    val income = sharedPref.read(Constants.USER_ID, "")?.let { it1 ->
+                        view.getIncome(it1, categorySelected)
+                    }
+                    if (income != null) {
+                        incomeRepository.updateUserIncome(income.uid, income.incomeAmount)
+                    }
+                }else{
+                    val expense = sharedPref.read(Constants.USER_ID, "")?.let { it1 ->
+                        view.getExpense(it1, categorySelected)
+                    }
+                    if (expense != null) {
+                        expenseRepository.updateUserExpense(expense.uid, expense.expenseAmount)
+                    }
+                }
+                view.showHomeScreen()
+            },{
+                Timber.e(it.localizedMessage)
+            })
     }
 }

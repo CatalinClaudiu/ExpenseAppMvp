@@ -2,7 +2,6 @@ package com.assist_software.expenseappmvp.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import io.reactivex.Single
 
 @Dao
 interface IncomeDao {
