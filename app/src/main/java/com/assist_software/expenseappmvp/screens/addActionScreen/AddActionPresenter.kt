@@ -134,11 +134,19 @@ class AddActionPresenter(
         return view.onSaveClick()
             .throttleFirst(Constants.THROTTLE_DURATION, TimeUnit.SECONDS)
             .observeOn(rxSchedulers.background())
-            .subscribe({
+            .doOnNext {
                 if (categorySelected == view.activity.getString(R.string.income)) {
                     incomeTransaction()
                 } else {
                     expenseTransaction()
+                }
+            }
+            .observeOn(rxSchedulers.androidUI())
+            .subscribe({
+                if (categorySelected == view.activity.getString(R.string.income)) {
+                    Toast.makeText(view.activity, view.activity.getString(R.string.budget_saved), Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(view.activity, view.activity.getString(R.string.expense_saved), Toast.LENGTH_SHORT).show()
                 }
                 view.showHomeScreen()
             }, {
@@ -153,9 +161,6 @@ class AddActionPresenter(
         income?.let {
             incomeRepository.updateUserIncome(income.uid, income.incomeAmount)
             incomeRepository.insertIncome(income)
-            Toast.makeText(view.activity,
-                view.activity.getString(R.string.budget_saved),
-                Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -166,9 +171,6 @@ class AddActionPresenter(
         expense?.let {
             expenseRepository.updateUserExpense(expense.uid, expense.expenseAmount)
             expenseRepository.insertExpense(expense)
-            Toast.makeText(view.activity,
-                view.activity.getString(R.string.expense_saved),
-                Toast.LENGTH_SHORT).show()
         }
     }
 }
