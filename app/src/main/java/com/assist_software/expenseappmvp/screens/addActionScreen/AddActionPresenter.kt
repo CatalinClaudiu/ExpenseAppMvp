@@ -140,6 +140,8 @@ class AddActionPresenter(
                     }
                     if (income != null) {
                         incomeRepository.updateUserIncome(income.uid, income.incomeAmount)
+                        incomeRepository.insertIncome(income)
+                        Toast.makeText(view.activity, view.activity.getString(R.string.budget_saved), Toast.LENGTH_SHORT).show()
                     }
                 }else{
                     val expense = sharedPref.read(Constants.USER_ID, "")?.let { it1 ->
@@ -147,6 +149,8 @@ class AddActionPresenter(
                     }
                     if (expense != null) {
                         expenseRepository.updateUserExpense(expense.uid, expense.expenseAmount)
+                        expenseRepository.insertExpense(expense)
+                        Toast.makeText(view.activity, view.activity.getString(R.string.expense_saved), Toast.LENGTH_SHORT).show()
                     }
                 }
                 view.showHomeScreen()
