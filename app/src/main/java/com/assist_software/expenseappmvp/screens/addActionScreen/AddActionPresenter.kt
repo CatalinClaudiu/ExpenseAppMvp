@@ -40,7 +40,6 @@ class AddActionPresenter(
             takePhoto(),
             deletePhoto(),
             cameraPermission(),
-            localStoragePermission(),
             saveTransactionToDB()
         )
     }
@@ -79,10 +78,11 @@ class AddActionPresenter(
     }
 
     private fun cameraPermission(): Disposable {
-        return rxPermissions.request(Manifest.permission.CAMERA)
+        return rxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
             .doOnNext {
                 if (it) {
                     takePhoto()
+                    loadImageFormStorage()
                 } else {
                     Toast.makeText(view.activity,
                         view.activity.getString(R.string.camera_permission_message),
@@ -98,20 +98,6 @@ class AddActionPresenter(
             .subscribe {
                 view.addImageFromCamera()
             }
-    }
-
-    private fun localStoragePermission(): Disposable {
-        return rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE)
-            .doOnNext {
-                if (it) {
-                    loadImageFormStorage()
-                } else {
-                    Toast.makeText(view.activity,
-                        view.activity.getString(R.string.storage_permission_message),
-                        Toast.LENGTH_SHORT).show()
-                }
-            }
-            .subscribe()
     }
 
     private fun loadImageFormStorage(): Disposable {
