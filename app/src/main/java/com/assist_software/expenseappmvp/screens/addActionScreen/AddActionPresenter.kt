@@ -130,28 +130,45 @@ class AddActionPresenter(
             }
     }
 
-    private fun saveTransactionToDB(): Disposable{
+    private fun saveTransactionToDB(): Disposable {
         return view.onSaveClick()
             .throttleFirst(Constants.THROTTLE_DURATION, TimeUnit.SECONDS)
+            .observeOn(rxSchedulers.background())
             .subscribe({
-                if(categorySelected == view.activity.getString(R.string.income)){
-                    val income = sharedPref.read(Constants.USER_ID, "")?.let { it1 ->
-                        view.getIncome(it1, categorySelected)
-                    }
-                    if (income != null) {
-                        incomeRepository.updateUserIncome(income.uid, income.incomeAmount)
-                    }
-                }else{
-                    val expense = sharedPref.read(Constants.USER_ID, "")?.let { it1 ->
-                        view.getExpense(it1, categorySelected)
-                    }
-                    if (expense != null) {
-                        expenseRepository.updateUserExpense(expense.uid, expense.expenseAmount)
-                    }
+                if (categorySelected == view.activity.getString(R.string.income)) {
+                    incomeTransaction()
+                } else {
+                    expenseTransaction()
                 }
                 view.showHomeScreen()
-            },{
+            }, {
                 Timber.e(it.localizedMessage)
             })
+    }
+
+    private fun incomeTransaction() {
+        val income = sharedPref.read(Constants.USER_ID, "")?.let { it1 ->
+            view.getIncome(it1, categorySelected)
+        }
+        income?.let {
+            incomeRepository.updateUserIncome(income.uid, income.incomeAmount)
+            incomeRepository.insertIncome(income)
+            Toast.makeText(view.activity,
+                view.activity.getString(R.string.budget_saved),
+                Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun expenseTransaction() {
+        val expense = sharedPref.read(Constants.USER_ID, "")?.let { it1 ->
+            view.getExpense(it1, categorySelected)
+        }
+        expense?.let {
+            expenseRepository.updateUserExpense(expense.uid, expense.expenseAmount)
+            expenseRepository.insertExpense(expense)
+            Toast.makeText(view.activity,
+                view.activity.getString(R.string.expense_saved),
+                Toast.LENGTH_SHORT).show()
+        }
     }
 }
