@@ -4,24 +4,35 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
 import com.assist_software.expenseappmvp.R
+import com.assist_software.expenseappmvp.data.database.entities.Expense
+import com.assist_software.expenseappmvp.data.database.entities.Income
 import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.screens.addActionScreen.adapter.CategoryAdapter
 import com.assist_software.expenseappmvp.screens.addActionScreen.adapter.models.CategoryItem
+import com.assist_software.expenseappmvp.screens.mainScreen.HomeActivity
 import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
-import com.jakewharton.rxbinding2.widget.TextViewAfterTextChangeEvent
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_add_action.view.*
 import kotlinx.android.synthetic.main.transaction_toolbar.view.*
+import java.io.ByteArrayOutputStream
 import java.util.*
 
 class AddActionView(var activity: AddActionActivity) {
     val layout: View = View.inflate(activity, R.layout.activity_add_action, null)
+
+    var defaultDetailsText: String = ""
+
+    fun showHomeScreen() {
+        HomeActivity.start(activity)
+        activity.finish()
+    }
 
     private fun loadImageInViewFromLocalStorage(data: Intent?) {
         layout.details_ImageView.run {
@@ -108,18 +119,6 @@ class AddActionView(var activity: AddActionActivity) {
         return RxView.clicks(layout.button_save)
     }
 
-    fun getAmount(): Observable<TextViewAfterTextChangeEvent>? {
-        return RxTextView.afterTextChangeEvents(layout.amount_EditText).skipInitialValue()
-    }
-
-    fun getDetailsText(): Observable<TextViewAfterTextChangeEvent>? {
-        return RxTextView.afterTextChangeEvents(layout.details_EditText).skipInitialValue()
-    }
-
-    fun getCategory(): Observable<Any> {
-        return RxView.clicks(layout.grid_recycler)
-    }
-
     fun initDatePicker(): Long {
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)
@@ -149,6 +148,46 @@ class AddActionView(var activity: AddActionActivity) {
             dpd.show()
             dpd.datePicker.maxDate = System.currentTimeMillis();
         }
-        return gmtTimestamp
+        return c.timeInMillis
+    }
+
+    fun getIncome(uid: String, category: String): Income {
+        if (layout.amount_EditText.text.toString() != null) {
+            defaultDetailsText = layout.amount_EditText.text.toString()
+        }
+        return Income(
+            uid = uid,
+            incomeDate = initDatePicker(),
+            incomeAmount = layout.amount_EditText.text.toString().toDouble(),
+            incomeCategory = category,
+            incomeDetails = defaultDetailsText,
+            incomeImage = imageToBitmap(layout.details_ImageView)
+        )
+    }
+
+    fun getExpense(uid: String, category: String): Expense {
+        if (layout.amount_EditText.text.toString() != null) {
+            defaultDetailsText = layout.amount_EditText.text.toString()
+        }
+
+        return Expense(
+            uid = uid,
+            expenseDate = initDatePicker(),
+            expenseAmount = layout.amount_EditText.text.toString().toDouble(),
+            expenseCategory = category,
+            expenseDetails = defaultDetailsText,
+            expenseImage = imageToBitmap(layout.details_ImageView)
+        )
+    }
+
+    private fun imageToBitmap(image: ImageView): ByteArray {
+        var returnArray = ByteArray(0)
+        if (image.drawable != null) {
+            val bitmap = (image.drawable as BitmapDrawable).bitmap
+            val stream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+            returnArray = stream.toByteArray()
+        }
+        return returnArray
     }
 }

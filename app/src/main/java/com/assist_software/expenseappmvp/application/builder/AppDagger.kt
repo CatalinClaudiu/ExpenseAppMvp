@@ -2,6 +2,7 @@ package com.assist_software.expenseappmvp.application.builder
 
 import android.content.Context
 import com.assist_software.expenseappmvp.data.database.AppDatabase
+import com.assist_software.expenseappmvp.data.database.repositories.ExpenseRepository
 import com.assist_software.expenseappmvp.data.database.repositories.IncomeRepository
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.rx.RxBus
@@ -52,4 +53,6 @@ interface AppComponent {
     fun initSharedPref(): SharedPrefUtils
 
     fun incomeRepository(): IncomeRepository
+
+    fun expenseRepository(): ExpenseRepository
 }
