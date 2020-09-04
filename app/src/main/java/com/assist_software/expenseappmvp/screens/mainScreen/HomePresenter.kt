@@ -1,7 +1,5 @@
 package com.assist_software.expenseappmvp.screens.mainScreen
 
-import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
-import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
 import com.assist_software.expenseappmvp.utils.SharedPrefUtils
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -9,8 +7,6 @@ import java.util.concurrent.TimeUnit
 
 class HomePresenter(
     private val view: HomeView,
-    private val rxSchedulers: RxSchedulers,
-    private val userRepository: UserRepository,
     private val sharedPref: SharedPrefUtils,
     private val compositeDisposables: CompositeDisposable
 ) {

@@ -3,7 +3,6 @@ package com.assist_software.expenseappmvp.application.builder
 import com.assist_software.expenseappmvp.data.utils.rx.AppRxSchedulers
 import com.assist_software.expenseappmvp.data.utils.rx.RxBus
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
-
 import dagger.Module
 import dagger.Provides
 

@@ -35,7 +35,7 @@ class HomeActivity : AppCompatActivity() {
         if (view.layout.home_drawer_layout.isDrawerOpen(GravityCompat.START)) {
             view.layout.home_drawer_layout.closeDrawer(GravityCompat.START)
         } else {
-            this.onBackPressed()
+            finish()
         }
     }
 

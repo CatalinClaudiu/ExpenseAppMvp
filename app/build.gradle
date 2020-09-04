@@ -108,6 +108,7 @@ dependencies {
     implementation "com.jakewharton.rxbinding2:rxbinding-design:$rootProject.rxBinding"
     implementation "com.jakewharton.rxbinding2:rxbinding-support-v4:$rootProject.rxBinding"
     implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rootProject.rxBinding"
+    implementation 'com.github.tbruyelle:rxpermissions:0.11'
 
     //Network
     implementation "com.squareup.okhttp3:okhttp:4.1.0"
