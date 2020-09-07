@@ -40,7 +40,6 @@ class AddActionPresenter(
             takePhoto(),
             deletePhoto(),
             cameraPermission(),
-            localStoragePermission(),
             saveTransactionToDB()
         )
     }
@@ -79,10 +78,11 @@ class AddActionPresenter(
     }
 
     private fun cameraPermission(): Disposable {
-        return rxPermissions.request(Manifest.permission.CAMERA)
+        return rxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
             .doOnNext {
                 if (it) {
                     takePhoto()
+                    loadImageFormStorage()
                 } else {
                     Toast.makeText(view.activity,
                         view.activity.getString(R.string.camera_permission_message),
@@ -98,20 +98,6 @@ class AddActionPresenter(
             .subscribe {
                 view.addImageFromCamera()
             }
-    }
-
-    private fun localStoragePermission(): Disposable {
-        return rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE)
-            .doOnNext {
-                if (it) {
-                    loadImageFormStorage()
-                } else {
-                    Toast.makeText(view.activity,
-                        view.activity.getString(R.string.storage_permission_message),
-                        Toast.LENGTH_SHORT).show()
-                }
-            }
-            .subscribe()
     }
 
     private fun loadImageFormStorage(): Disposable {
@@ -130,32 +116,47 @@ class AddActionPresenter(
             }
     }
 
-    private fun saveTransactionToDB(): Disposable{
+    private fun saveTransactionToDB(): Disposable {
         return view.onSaveClick()
             .throttleFirst(Constants.THROTTLE_DURATION, TimeUnit.SECONDS)
+            .observeOn(rxSchedulers.background())
+            .doOnNext {
+                if (categorySelected == view.activity.getString(R.string.income)) {
+                    incomeTransaction()
+                } else {
+                    expenseTransaction()
+                }
+            }
+            .observeOn(rxSchedulers.androidUI())
             .subscribe({
-                if(categorySelected == view.activity.getString(R.string.income)){
-                    val income = sharedPref.read(Constants.USER_ID, "")?.let { it1 ->
-                        view.getIncome(it1, categorySelected)
-                    }
-                    if (income != null) {
-                        incomeRepository.updateUserIncome(income.uid, income.incomeAmount)
-                        incomeRepository.insertIncome(income)
-                        Toast.makeText(view.activity, view.activity.getString(R.string.budget_saved), Toast.LENGTH_SHORT).show()
-                    }
-                }else{
-                    val expense = sharedPref.read(Constants.USER_ID, "")?.let { it1 ->
-                        view.getExpense(it1, categorySelected)
-                    }
-                    if (expense != null) {
-                        expenseRepository.updateUserExpense(expense.uid, expense.expenseAmount)
-                        expenseRepository.insertExpense(expense)
-                        Toast.makeText(view.activity, view.activity.getString(R.string.expense_saved), Toast.LENGTH_SHORT).show()
-                    }
+                if (categorySelected == view.activity.getString(R.string.income)) {
+                    Toast.makeText(view.activity, view.activity.getString(R.string.budget_saved), Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(view.activity, view.activity.getString(R.string.expense_saved), Toast.LENGTH_SHORT).show()
                 }
                 view.showHomeScreen()
-            },{
+            }, {
                 Timber.e(it.localizedMessage)
             })
+    }
+
+    private fun incomeTransaction() {
+        val income = sharedPref.read(Constants.USER_ID, "")?.let { it1 ->
+            view.getIncome(it1, categorySelected)
+        }
+        income?.let {
+            incomeRepository.updateUserIncome(income.uid, income.incomeAmount)
+            incomeRepository.insertIncome(income)
+        }
+    }
+
+    private fun expenseTransaction() {
+        val expense = sharedPref.read(Constants.USER_ID, "")?.let { it1 ->
+            view.getExpense(it1, categorySelected)
+        }
+        expense?.let {
+            expenseRepository.updateUserExpense(expense.uid, expense.expenseAmount)
+            expenseRepository.insertExpense(expense)
+        }
     }
 }

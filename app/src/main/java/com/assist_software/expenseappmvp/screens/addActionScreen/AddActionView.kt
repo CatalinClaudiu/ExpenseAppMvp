@@ -26,6 +26,7 @@ import java.util.*
 
 class AddActionView(var activity: AddActionActivity) {
     val layout: View = View.inflate(activity, R.layout.activity_add_action, null)
+    private val c = Calendar.getInstance()
 
     var defaultDetailsText: String = ""
 
@@ -119,36 +120,28 @@ class AddActionView(var activity: AddActionActivity) {
         return RxView.clicks(layout.button_save)
     }
 
-    fun initDatePicker(): Long {
-        val c = Calendar.getInstance()
+    private fun getUTCTimestamp(): Long{
+        return c.timeInMillis
+    }
+
+    fun initDatePicker() {
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
         val hour = c.get(Calendar.HOUR_OF_DAY)
         val min = c.get(Calendar.MINUTE)
 
-        var gmtTimestamp: Long = -1
-
-        layout.date_EditText.date_EditText.setOnClickListener {
-            val dpd = DatePickerDialog(
-                activity,
-                { view, mYear, mMonth, mDay ->
-                    layout.date_EditText.setText(mYear.toString() + "-" + mMonth.toString() + "-" + mDay.toString() + " at " + hour + ":" + min)
-                    gmtTimestamp = c.run {
-                        c.set(Calendar.YEAR, mYear)
-                        c.set(Calendar.MONTH, mMonth)
-                        c.set(Calendar.DAY_OF_MONTH, mDay)
-                        timeInMillis
-                    }
-                },
-                year,
-                month,
-                day
-            )
-            dpd.show()
-            dpd.datePicker.maxDate = System.currentTimeMillis();
-        }
-        return c.timeInMillis
+        val dpd = DatePickerDialog(
+            activity,
+            { view, mYear, mMonth, mDay ->
+                layout.date_EditText.setText(mYear.toString() + "-" + mMonth.toString() + "-" + mDay.toString() + " at " + hour + ":" + min)
+            },
+            year,
+            month,
+            day
+        )
+        dpd.show()
+        dpd.datePicker.maxDate = System.currentTimeMillis();
     }
 
     fun getIncome(uid: String, category: String): Income {
@@ -157,7 +150,7 @@ class AddActionView(var activity: AddActionActivity) {
         }
         return Income(
             uid = uid,
-            incomeDate = initDatePicker(),
+            incomeDate = getUTCTimestamp(),
             incomeAmount = layout.amount_EditText.text.toString().toDouble(),
             incomeCategory = category,
             incomeDetails = defaultDetailsText,
@@ -172,7 +165,7 @@ class AddActionView(var activity: AddActionActivity) {
 
         return Expense(
             uid = uid,
-            expenseDate = initDatePicker(),
+            expenseDate = getUTCTimestamp(),
             expenseAmount = layout.amount_EditText.text.toString().toDouble(),
             expenseCategory = category,
             expenseDetails = defaultDetailsText,
