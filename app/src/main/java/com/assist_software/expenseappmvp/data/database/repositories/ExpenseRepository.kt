@@ -12,4 +12,8 @@ class ExpenseRepository(private val db: AppDatabase) {
     fun insertExpense(expense: Expense): Single<Long>{
         return db.expenseDao().insertOrUpdateExpense(expense)
     }
+
+    fun getExpenseByDate(startDate: Long, endDate: Long, uid: String): Single<Double>{
+        return db.expenseDao().getUserExpenseByDate(startDate, endDate, uid)
+    }
 }

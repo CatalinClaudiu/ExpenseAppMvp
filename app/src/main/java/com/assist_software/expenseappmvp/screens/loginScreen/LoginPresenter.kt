@@ -80,7 +80,9 @@ class LoginPresenter(
             .doOnSuccess {
                 sharedPref.write(Constants.USER_ID, it)
                 view.showMainScreen()
-            }.subscribe()
+            }
+            .observeOn(rxSchedulers.androidUI())
+            .subscribe()
     }
 
     fun onCreate() {

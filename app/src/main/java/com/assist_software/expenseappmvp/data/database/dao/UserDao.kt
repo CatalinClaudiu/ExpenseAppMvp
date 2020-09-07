@@ -21,4 +21,10 @@ interface UserDao {
 
     @Query("SELECT uid FROM users WHERE userEmail = :email")
     fun getUserIdByEmail(email: String): Single<String>
+
+    @Query("SELECT userCurrentBalance FROM users WHERE uid = :uid")
+    fun getUserBalance(uid: String): Single<Double>
+
+    @Query("SELECT userName FROM users WHERE uid = :uid")
+    fun getUserName(uid: String): Single<String>
 }

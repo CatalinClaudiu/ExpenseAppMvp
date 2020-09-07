@@ -14,4 +14,7 @@ interface ExpenseDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrUpdateExpense(expense: Expense): Single<Long>
+
+    @Query("SELECT SUM(expenseAmount) FROM expenses WHERE expenseDate BETWEEN :startDate AND :endDate AND uid=:uid GROUP BY :uid")
+    fun getUserExpenseByDate(startDate: Long, endDate: Long, uid: String): Single<Double>
 }

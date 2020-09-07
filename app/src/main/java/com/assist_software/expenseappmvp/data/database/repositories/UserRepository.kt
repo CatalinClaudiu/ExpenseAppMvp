@@ -14,4 +14,12 @@ class UserRepository(private val db: AppDatabase) {
     fun getUserId(email: String): Single<String> {
         return db.userDao().getUserIdByEmail(email)
     }
+
+    fun getUserBalance(uid: String): Single<Double> {
+        return db.userDao().getUserBalance(uid)
+    }
+
+    fun getUserName(uid: String): Single<String>{
+        return db.userDao().getUserName(uid)
+    }
 }
