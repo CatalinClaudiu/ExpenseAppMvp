@@ -9,7 +9,7 @@ import com.assist_software.expenseappmvp.data.database.entities.Expense
 import com.assist_software.expenseappmvp.data.database.entities.Income
 import com.assist_software.expenseappmvp.data.database.entities.User
 
-@Database(entities = [User::class, Income::class, Expense::class], version = 1)
+@Database(entities = [User::class, Income::class, Expense::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun incomeDao(): IncomeDao

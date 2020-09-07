@@ -5,12 +5,13 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.assist_software.expenseappmvp.data.database.entities.Expense
+import io.reactivex.Single
 
 @Dao
 interface ExpenseDao {
     @Query("UPDATE users SET userCurrentBalance = userCurrentBalance - :new_expense WHERE uid = :id")
-    fun updateUserExpense(id: String, new_expense: Double)
+    fun updateUserExpense(id: String, new_expense: Double): Single<Int>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrUpdateExpense(expense: Expense)
+    fun insertOrUpdateExpense(expense: Expense): Single<Long>
 }

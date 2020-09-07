@@ -35,13 +35,14 @@ class AddActionPresenter(
     fun onCreate() {
         itemClickAction()
         view.initCategoryGrid(onItemClick, setCategoryData())
-        compositeDisposables.addAll(selectDate(),
+        compositeDisposables.addAll(
+            selectDate(),
             loadImageFormStorage(),
             takePhoto(),
             deletePhoto(),
-            cameraPermission(),
-            saveTransactionToDB()
+            cameraPermission()
         )
+        saveAction()
     }
 
     fun onDestroy() {
@@ -63,9 +64,13 @@ class AddActionPresenter(
         enumValues<CategoryEnum>().forEach { it ->
             val selected = it.getName(view.activity)
                 .equals(CategoryEnum.INCOME.getName(view.activity), true)
-            list.add(CategoryItem(it.getIcon(view.activity),
-                it.getName(view.activity),
-                selected))
+            list.add(
+                CategoryItem(
+                    it.getIcon(view.activity),
+                    it.getName(view.activity),
+                    selected
+                )
+            )
         }
         return list
     }
@@ -77,16 +82,36 @@ class AddActionPresenter(
             }
     }
 
+    private fun saveAction() {
+        return view.onSaveClick()
+            .subscribe({
+                if (categorySelected == view.activity.getString(R.string.income)) {
+                    saveIncomeTransaction()
+                    Toast.makeText(view.activity, view.activity.getString(R.string.budget_saved), Toast.LENGTH_SHORT).show()
+                } else {
+                    saveExpenseTransaction()
+                    Toast.makeText(view.activity, view.activity.getString(R.string.expense_saved), Toast.LENGTH_SHORT).show()
+                }
+            }, {
+                Timber.e(it.localizedMessage)
+            }).disposeBy(compositeDisposables)
+    }
+
     private fun cameraPermission(): Disposable {
-        return rxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
+        return rxPermissions.request(
+            Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
             .doOnNext {
                 if (it) {
                     takePhoto()
                     loadImageFormStorage()
                 } else {
-                    Toast.makeText(view.activity,
+                    Toast.makeText(
+                        view.activity,
                         view.activity.getString(R.string.camera_permission_message),
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             .subscribe()
@@ -116,47 +141,35 @@ class AddActionPresenter(
             }
     }
 
-    private fun saveTransactionToDB(): Disposable {
-        return view.onSaveClick()
-            .throttleFirst(Constants.THROTTLE_DURATION, TimeUnit.SECONDS)
-            .observeOn(rxSchedulers.background())
-            .doOnNext {
-                if (categorySelected == view.activity.getString(R.string.income)) {
-                    incomeTransaction()
-                } else {
-                    expenseTransaction()
-                }
-            }
-            .observeOn(rxSchedulers.androidUI())
-            .subscribe({
-                if (categorySelected == view.activity.getString(R.string.income)) {
-                    Toast.makeText(view.activity, view.activity.getString(R.string.budget_saved), Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(view.activity, view.activity.getString(R.string.expense_saved), Toast.LENGTH_SHORT).show()
-                }
-                view.showHomeScreen()
-            }, {
-                Timber.e(it.localizedMessage)
-            })
-    }
-
-    private fun incomeTransaction() {
-        val income = sharedPref.read(Constants.USER_ID, "")?.let { it1 ->
-            view.getIncome(it1, categorySelected)
-        }
-        income?.let {
-            incomeRepository.updateUserIncome(income.uid, income.incomeAmount)
+    private fun saveIncomeTransaction() {
+        sharedPref.read(Constants.USER_ID, "")?.run {
+            val income = view.getIncome(this, categorySelected)
             incomeRepository.insertIncome(income)
+                .observeOn(rxSchedulers.background())
+                .flatMap {
+                    incomeRepository.updateUserIncome(this, income.incomeAmount)
+                }.subscribe({
+                    view.showHomeScreen()
+                }, {
+                    Timber.e(it.localizedMessage)
+                })
+                .disposeBy(compositeDisposables)
         }
     }
 
-    private fun expenseTransaction() {
-        val expense = sharedPref.read(Constants.USER_ID, "")?.let { it1 ->
-            view.getExpense(it1, categorySelected)
-        }
-        expense?.let {
-            expenseRepository.updateUserExpense(expense.uid, expense.expenseAmount)
+    private fun saveExpenseTransaction() {
+        sharedPref.read(Constants.USER_ID, "")?.run {
+            val expense = view.getExpense(this, categorySelected)
             expenseRepository.insertExpense(expense)
+                .observeOn(rxSchedulers.background())
+                .flatMap {
+                    expenseRepository.updateUserExpense(this, expense.expenseAmount)
+                }.subscribe({
+                    view.showHomeScreen()
+                }, {
+                    Timber.e(it.localizedMessage)
+                })
+                .disposeBy(compositeDisposables)
         }
     }
 }

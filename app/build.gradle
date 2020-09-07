@@ -87,7 +87,9 @@ dependencies {
 
     //Data
     implementation 'com.google.code.gson:gson:2.8.5'
-    kapt "android.arch.persistence.room:compiler:$rootProject.arch"
+    kapt "androidx.room:room-compiler:$rootProject.arch"
+    implementation "androidx.room:room-runtime:$rootProject.arch"
+    implementation "androidx.room:room-rxjava2:$rootProject.arch"
     implementation "android.arch.lifecycle:extensions:$rootProject.arch"
     implementation "android.arch.lifecycle:common-java8:$rootProject.arch"
     implementation "android.arch.persistence.room:rxjava2:$rootProject.arch"
