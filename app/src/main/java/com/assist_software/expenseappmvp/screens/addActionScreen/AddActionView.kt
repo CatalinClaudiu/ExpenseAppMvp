@@ -43,7 +43,7 @@ class AddActionView(var activity: AddActionActivity) {
     }
 
     private fun loadImageInViewFromCamera(data: Intent?) {
-        var bitmap: Bitmap = data?.extras?.get("data") as Bitmap
+        val bitmap: Bitmap = data?.extras?.get("data") as Bitmap
         layout.details_ImageView.run {
             setBackgroundResource(android.R.color.transparent)
             setImageBitmap(bitmap)
@@ -120,7 +120,7 @@ class AddActionView(var activity: AddActionActivity) {
         return RxView.clicks(layout.button_save)
     }
 
-    private fun getUTCTimestamp(): Long{
+    private fun getUTCTimestamp(): Long {
         return c.timeInMillis
     }
 
@@ -132,13 +132,13 @@ class AddActionView(var activity: AddActionActivity) {
         val min = c.get(Calendar.MINUTE)
 
         val dpd = DatePickerDialog(
-            activity,
-            { view, mYear, mMonth, mDay ->
-                layout.date_EditText.setText(mYear.toString() + "-" + mMonth.toString() + "-" + mDay.toString() + " at " + hour + ":" + min)
-            },
-            year,
-            month,
-            day
+                activity,
+                { view, mYear, mMonth, mDay ->
+                    layout.date_EditText.setText(mYear.toString() + "-" + mMonth.toString() + "-" + mDay.toString() + " at " + hour + ":" + min)
+                },
+                year,
+                month,
+                day
         )
         dpd.show()
         dpd.datePicker.maxDate = System.currentTimeMillis();
@@ -146,30 +146,31 @@ class AddActionView(var activity: AddActionActivity) {
 
     fun getIncome(uid: String, category: String): Income {
         if (layout.amount_EditText.text.toString() != null) {
-            defaultDetailsText = layout.amount_EditText.text.toString()
+            defaultDetailsText = layout.details_EditText.text.toString()
         }
+        val amount = if (layout.amount_EditText.text.toString().isEmpty()) 0.0 else layout.amount_EditText.text.toString().toDouble()
         return Income(
-            uid = uid,
-            incomeDate = getUTCTimestamp(),
-            incomeAmount = layout.amount_EditText.text.toString().toDouble(),
-            incomeCategory = category,
-            incomeDetails = defaultDetailsText,
-            incomeImage = imageToBitmap(layout.details_ImageView)
+                uid = uid,
+                incomeDate = getUTCTimestamp(),
+                incomeAmount = amount,
+                incomeCategory = category,
+                incomeDetails = defaultDetailsText,
+                incomeImage = imageToBitmap(layout.details_ImageView)
         )
     }
 
     fun getExpense(uid: String, category: String): Expense {
-        if (layout.amount_EditText.text.toString() != null) {
+        if (layout.amount_EditText.text.toString().isNotEmpty()) {
             defaultDetailsText = layout.amount_EditText.text.toString()
         }
-
+        val amount = if (layout.amount_EditText.text.toString().isEmpty()) 0.0 else layout.amount_EditText.text.toString().toDouble()
         return Expense(
-            uid = uid,
-            expenseDate = getUTCTimestamp(),
-            expenseAmount = layout.amount_EditText.text.toString().toDouble(),
-            expenseCategory = category,
-            expenseDetails = defaultDetailsText,
-            expenseImage = imageToBitmap(layout.details_ImageView)
+                uid = uid,
+                expenseDate = getUTCTimestamp(),
+                expenseAmount = amount,
+                expenseCategory = category,
+                expenseDetails = defaultDetailsText,
+                expenseImage = imageToBitmap(layout.details_ImageView)
         )
     }
 
