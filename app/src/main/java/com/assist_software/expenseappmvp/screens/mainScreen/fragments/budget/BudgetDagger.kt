@@ -1,6 +1,9 @@
-package com.assist_software.expenseappmvp.screens.mainScreen
+package com.assist_software.expenseappmvp.screens.mainScreen.fragments.budget
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.assist_software.expenseappmvp.application.builder.AppComponent
+import com.assist_software.expenseappmvp.data.database.repositories.ExpenseRepository
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
 import com.assist_software.expenseappmvp.utils.SharedPrefUtils
@@ -12,40 +15,46 @@ import javax.inject.Scope
 
 @Scope
 @Retention(AnnotationRetention.RUNTIME)
-annotation class HomeScope
+annotation class BudgetScope
 
-@HomeScope
+@BudgetScope
 @Component(
-    modules = [HomeModule::class],
+    modules = [BudgetModule::class],
     dependencies = [AppComponent::class]
 )
-interface HomeComponent {
-    fun inject(activity: HomeActivity)
+interface BudgetComponent {
+    fun inject(fragment: BudgetFragment)
 }
 
 @Module
-class HomeModule(private val activity: HomeActivity) {
+class BudgetModule(
+    private val fragment: BudgetFragment,
+    private val inflater: LayoutInflater,
+    private val container: ViewGroup?
+) {
 
     @Provides
-    @HomeScope
-    fun view(): HomeView {
-        return HomeView(activity)
+    @BudgetScope
+    fun view(): BudgetView {
+        return BudgetView(fragment, inflater, container)
     }
 
     @Provides
-    @HomeScope
+    @BudgetScope
     fun presenter(
-        view: HomeView,
+        view: BudgetView,
         sharedPref: SharedPrefUtils,
         userRepository: UserRepository,
+        expenseRepository: ExpenseRepository,
         rxSchedulers: RxSchedulers
-    ): HomePresenter {
+    ): BudgetPresenter {
         val compositeDisposable = CompositeDisposable()
-        return HomePresenter(
+        return BudgetPresenter(
             view,
             sharedPref,
             rxSchedulers,
             userRepository,
+            expenseRepository,
             compositeDisposable
         )
     }

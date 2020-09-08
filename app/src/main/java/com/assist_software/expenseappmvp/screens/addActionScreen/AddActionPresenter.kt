@@ -87,10 +87,18 @@ class AddActionPresenter(
             .subscribe({
                 if (categorySelected == view.activity.getString(R.string.income)) {
                     saveIncomeTransaction()
-                    Toast.makeText(view.activity, view.activity.getString(R.string.budget_saved), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        view.activity,
+                        view.activity.getString(R.string.budget_saved),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
                     saveExpenseTransaction()
-                    Toast.makeText(view.activity, view.activity.getString(R.string.expense_saved), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        view.activity,
+                        view.activity.getString(R.string.expense_saved),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }, {
                 Timber.e(it.localizedMessage)
@@ -148,7 +156,9 @@ class AddActionPresenter(
                 .observeOn(rxSchedulers.background())
                 .flatMap {
                     incomeRepository.updateUserIncome(this, income.incomeAmount)
-                }.subscribe({
+                }
+                .observeOn(rxSchedulers.androidUI())
+                .subscribe({
                     view.showHomeScreen()
                 }, {
                     Timber.e(it.localizedMessage)
@@ -164,7 +174,9 @@ class AddActionPresenter(
                 .observeOn(rxSchedulers.background())
                 .flatMap {
                     expenseRepository.updateUserExpense(this, expense.expenseAmount)
-                }.subscribe({
+                }
+                .observeOn(rxSchedulers.androidUI())
+                .subscribe({
                     view.showHomeScreen()
                 }, {
                     Timber.e(it.localizedMessage)

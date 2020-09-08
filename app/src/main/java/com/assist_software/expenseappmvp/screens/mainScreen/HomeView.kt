@@ -15,6 +15,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.home_nav_header.view.*
 import kotlinx.android.synthetic.main.home_toolbar.view.*
 
 class HomeView(var activity: HomeActivity) : NavigationView.OnNavigationItemSelectedListener {
@@ -95,5 +96,9 @@ class HomeView(var activity: HomeActivity) : NavigationView.OnNavigationItemSele
             R.string.navigation_drawer_close)
         navigationDrawer.addDrawerListener(actionBarToggle)
         actionBarToggle.syncState()
+    }
+
+    fun setUserName(userName: String){
+        layout.home_nav_view.getHeaderView(0).side_menu_user_name.text = activity.getString(R.string.hello_user, userName)
     }
 }

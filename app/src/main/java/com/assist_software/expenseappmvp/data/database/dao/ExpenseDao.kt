@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.assist_software.expenseappmvp.data.database.entities.Expense
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 @Dao
@@ -14,4 +15,7 @@ interface ExpenseDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrUpdateExpense(expense: Expense): Single<Long>
+
+    @Query("SELECT SUM(expenseAmount) FROM expenses WHERE expenseDate BETWEEN :startDate AND :endDate AND uid=:uid GROUP BY :uid")
+    fun getUserExpenseByDate(startDate: Long, endDate: Long, uid: String): Maybe<Double>
 }
