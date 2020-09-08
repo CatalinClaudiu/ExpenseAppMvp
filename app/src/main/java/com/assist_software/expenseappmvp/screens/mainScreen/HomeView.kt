@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import com.assist_software.expenseappmvp.R
 import com.assist_software.expenseappmvp.screens.addActionScreen.AddActionActivity
+import com.assist_software.expenseappmvp.screens.currencyConverterScreen.CurrencyConverterActivity
 import com.assist_software.expenseappmvp.screens.loginScreen.LoginActivity
 import com.assist_software.expenseappmvp.screens.mainScreen.adapter.ViewPagerAdapter
 import com.google.android.material.navigation.NavigationView
@@ -52,7 +53,7 @@ class HomeView(var activity: HomeActivity) : NavigationView.OnNavigationItemSele
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_home -> navigationDrawer.closeDrawers()
-            //R.id.nav_converter -> navigateToConverter()
+            R.id.nav_converter -> CurrencyConverterActivity.start(activity)
         }
         navigationDrawer.closeDrawer(GravityCompat.START)
         return true

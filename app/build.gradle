@@ -33,7 +33,7 @@ android {
         develop {
             dimension "app"
             versionNameSuffix "-dev"
-            buildConfigField 'String', 'API_URL', '"https://my_api_url.com/"'
+            buildConfigField 'String', 'API_URL', '"https://api.exchangerate.host/"'
         }
         mock {
             dimension "app"

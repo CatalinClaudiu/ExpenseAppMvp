@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.assist_software.expenseappmvp">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".application.ExpenseApp"
@@ -42,6 +43,12 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".screens.addActionScreen.AddActionActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBarNoFullScreen"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".screens.currencyConverterScreen.CurrencyConverterActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBarNoFullScreen"

@@ -55,4 +55,6 @@ interface AppComponent {
     fun incomeRepository(): IncomeRepository
 
     fun expenseRepository(): ExpenseRepository
+
+    fun provideAPIInterface(): RestServiceInterface
 }
