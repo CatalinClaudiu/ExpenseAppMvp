@@ -21,13 +21,15 @@ import kotlinx.android.synthetic.main.home_toolbar.view.*
 class HomeView(var activity: HomeActivity) : NavigationView.OnNavigationItemSelectedListener {
     val layout: View = View.inflate(activity, R.layout.activity_main, null)
     private val navigationDrawer = layout.home_drawer_layout
+    lateinit var toolbar: Toolbar
+    private val fragmentAdapter = ViewPagerAdapter(activity, 2)
 
     init {
-        val fragmentAdapter = ViewPagerAdapter(activity, 2)
         layout.viewPager_fragment_container.adapter = fragmentAdapter
-
-        TabLayoutMediator(layout.bottom_tab_layout,
-            layout.viewPager_fragment_container) { tab, pos ->
+        TabLayoutMediator(
+            layout.bottom_tab_layout,
+            layout.viewPager_fragment_container
+        ) { tab, pos ->
             when (pos) {
                 0 -> {
                     tab.icon = ContextCompat.getDrawable(activity, R.drawable.ic_budget)
@@ -44,7 +46,6 @@ class HomeView(var activity: HomeActivity) : NavigationView.OnNavigationItemSele
                 }
             }
         }.attach()
-
         layout.viewPager_fragment_container.currentItem = 0
     }
 
@@ -56,7 +57,6 @@ class HomeView(var activity: HomeActivity) : NavigationView.OnNavigationItemSele
         navigationDrawer.closeDrawer(GravityCompat.START)
         return true
     }
-
 
     fun showAddActionScreen() {
         AddActionActivity.start(activity)
@@ -70,7 +70,7 @@ class HomeView(var activity: HomeActivity) : NavigationView.OnNavigationItemSele
         layout.home_nav_view.setNavigationItemSelectedListener(this)
     }
 
-    fun logOutUser(): Observable<Any>{
+    fun logOutUser(): Observable<Any> {
         return RxView.clicks(layout.logout_btn)
     }
 
@@ -80,7 +80,7 @@ class HomeView(var activity: HomeActivity) : NavigationView.OnNavigationItemSele
     }
 
     fun initToolbar() {
-        val toolbar = layout.home_tool_bar
+        toolbar = layout.home_tool_bar
         activity.setSupportActionBar(toolbar)
         activity.supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.title = activity.getString(R.string.my_budget)
@@ -89,16 +89,19 @@ class HomeView(var activity: HomeActivity) : NavigationView.OnNavigationItemSele
     }
 
     fun initNavigationDrawer(toolbar: Toolbar) {
-        val actionBarToggle = ActionBarDrawerToggle(activity,
+        val actionBarToggle = ActionBarDrawerToggle(
+            activity,
             navigationDrawer,
             toolbar,
             R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close)
+            R.string.navigation_drawer_close
+        )
         navigationDrawer.addDrawerListener(actionBarToggle)
         actionBarToggle.syncState()
     }
 
-    fun setUserName(userName: String){
-        layout.home_nav_view.getHeaderView(0).side_menu_user_name.text = activity.getString(R.string.hello_user, userName)
+    fun setUserName(userName: String) {
+        layout.home_nav_view.getHeaderView(0).side_menu_user_name.text =
+            activity.getString(R.string.hello_user, userName)
     }
 }

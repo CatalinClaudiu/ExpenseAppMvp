@@ -54,7 +54,7 @@
         android:id="@+id/total_expense_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="890"
+        android:text="0.0"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/text_16sp"
         android:fontFamily="@font/roboto_normal"

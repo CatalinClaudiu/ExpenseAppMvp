@@ -15,7 +15,6 @@ class HomePresenter(
     private val userRepository: UserRepository,
     private val compositeDisposables: CompositeDisposable
 ) {
-
     private fun onAddActionClick(): Disposable {
         return view.goToAddActionScreen()
             .observeOn(rxSchedulers.androidUI())
