@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.assist_software.expenseappmvp.data.database.entities.User
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 @Dao
@@ -23,7 +24,7 @@ interface UserDao {
     fun getUserIdByEmail(email: String): Single<String>
 
     @Query("SELECT userCurrentBalance FROM users WHERE uid = :uid")
-    fun getUserBalance(uid: String): Single<Double>
+    fun getUserBalance(uid: String): Maybe<Double>
 
     @Query("SELECT userName FROM users WHERE uid = :uid")
     fun getUserName(uid: String): Single<String>

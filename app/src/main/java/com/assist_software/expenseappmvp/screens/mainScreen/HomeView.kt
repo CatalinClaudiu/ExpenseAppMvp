@@ -99,6 +99,6 @@ class HomeView(var activity: HomeActivity) : NavigationView.OnNavigationItemSele
     }
 
     fun setUserName(userName: String){
-        layout.home_nav_view.getHeaderView(0).side_menu_user_name.text = userName
+        layout.home_nav_view.getHeaderView(0).side_menu_user_name.text = activity.getString(R.string.hello_user, userName)
     }
 }
