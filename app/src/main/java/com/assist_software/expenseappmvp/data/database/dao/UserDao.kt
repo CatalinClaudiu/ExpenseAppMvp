@@ -1,10 +1,8 @@
 package com.assist_software.expenseappmvp.data.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.assist_software.expenseappmvp.data.database.entities.User
+import com.assist_software.expenseappmvp.data.database.models.UserWithExpenses
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -28,4 +26,8 @@ interface UserDao {
 
     @Query("SELECT userName FROM users WHERE uid = :uid")
     fun getUserName(uid: String): Single<String>
+
+    @Transaction
+    @Query("SELECT * FROM users WHERE uid=:uid")
+    fun getUserExpenses(uid: String): UserWithExpenses
 }
