@@ -28,4 +28,8 @@ class UserRepository(private val db: AppDatabase) {
     fun loadUserWithExpenses(uid: String): UserWithExpenses {
         return db.userDao().getUserExpenses(uid)
     }
+
+    fun updateUserPassword(password: String, email: String){
+        return db.userDao().updatePassword(password, email)
+    }
 }
