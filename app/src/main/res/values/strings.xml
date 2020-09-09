@@ -61,7 +61,7 @@
     <string name="string_0">0</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
-    <string name="dodgy_api_date">Converted using SDA (SOME DODGY API) at date %1s</string>
+    <string name="dodgy_api_date">Converted using BNR at date %1s</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="wrong_data">Wrong data inserted</string>
@@ -73,4 +73,6 @@
     <string name="camera_permission_message">This permission is needed to take photos of your invoices with the camera</string>
     <string name="storage_permission_message">This permission is needed to use photos from local storage</string>
     <string name="hello_user">Hello %1s</string>
+    <string name="retrieve_failed">Failed to retrieve info</string>
+    <string name="response_received">The response was received</string>
 </resources>

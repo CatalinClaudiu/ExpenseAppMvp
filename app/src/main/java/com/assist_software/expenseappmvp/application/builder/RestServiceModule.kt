@@ -25,4 +25,11 @@ class RestServiceModule {
             .client(okHttpClient)
             .build()
     }
+
+    @AppScope
+    @Provides
+    fun provideAPIInterface(retrofit: Retrofit):RestServiceInterface{
+        return retrofit.create(RestServiceInterface::class.java)
+    }
+
 }
