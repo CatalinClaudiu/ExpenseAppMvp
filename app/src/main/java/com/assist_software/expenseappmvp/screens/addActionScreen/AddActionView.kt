@@ -161,7 +161,7 @@ class AddActionView(var activity: AddActionActivity) {
 
     fun getExpense(uid: String, category: String): Expense {
         if (layout.amount_EditText.text.toString().isNotEmpty()) {
-            defaultDetailsText = layout.amount_EditText.text.toString()
+            defaultDetailsText = layout.details_EditText.text.toString()
         }
         val amount = if (layout.amount_EditText.text.toString().isEmpty()) 0.0 else layout.amount_EditText.text.toString().toDouble()
         return Expense(
