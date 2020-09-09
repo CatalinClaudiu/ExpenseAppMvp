@@ -6,16 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.assist_software.expenseappmvp.R
 import com.assist_software.expenseappmvp.screens.addActionScreen.enum.CategoryEnum
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.models.Transaction
 import com.assist_software.expenseappmvp.utils.TimeUtils
+import io.reactivex.subjects.PublishSubject
 
 class TransactionAdapter(
     private val context: Context,
-    private val arrayList: List<Transaction>
+    private val arrayList: List<Transaction>,
+    private val transactionAdapterListener: PublishSubject<Transaction>
 ) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.transaction_item, parent, false)
@@ -72,6 +75,8 @@ class TransactionAdapter(
                 holder.transactionCategoryIcon.setImageResource(CategoryEnum.TRAVEL.getIcon(context))
             }
         }
+
+        holder.transactionBox.setOnClickListener { transactionAdapterListener.onNext(currentItem) }
     }
 
     override fun getItemCount(): Int {
@@ -88,5 +93,6 @@ class TransactionAdapter(
             itemView.findViewById(R.id.transaction_amount_value_textView)
         val transactionName: TextView = itemView.findViewById(R.id.transaction_name_textView)
         val balanceValue: TextView = itemView.findViewById(R.id.balance_value_textView)
+        val transactionBox: ConstraintLayout = itemView.findViewById(R.id.transaction_item)
     }
 }

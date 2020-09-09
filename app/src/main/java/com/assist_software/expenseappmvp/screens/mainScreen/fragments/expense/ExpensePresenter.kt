@@ -17,7 +17,9 @@ import com.assist_software.expenseappmvp.utils.SharedPrefUtils
 import com.assist_software.expenseappmvp.utils.disposeBy
 import com.trinnguyen.SegmentView
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_expenses.view.*
+import timber.log.Timber
 import java.util.*
 
 class ExpensePresenter(
@@ -31,12 +33,14 @@ class ExpensePresenter(
 
     private var endDay: Long = 0
     private var uid: String = ""
+    private val onItemClick = PublishSubject.create<Transaction>()
 
     fun onCreate() {
 
         initComponents()
-        initTransactionRecyclerView()
+        initTransactionRecyclerView(onItemClick)
         view.initSegmentComponents()
+        itemClickAction()
     }
 
     fun onDestroy() {
@@ -81,7 +85,7 @@ class ExpensePresenter(
             .disposeBy(compositeDisposables)
     }
 
-    private fun initTransactionRecyclerView() {
+    private fun initTransactionRecyclerView(listener: PublishSubject<Transaction>) {
         val userDetails = userRepository.loadUserWithExpenses(uid)
 
         val incomeList = mutableListOf<Income>()
@@ -100,7 +104,9 @@ class ExpensePresenter(
                 incomeList[index].incomeAmount,
                 incomeList[index].incomeCategory,
                 transactionName,
-                0.0
+                0.0,
+                incomeList[index].incomeDetails,
+                incomeList[index].incomeImage
             )
             transactionList.add(transactionObject)
         }
@@ -114,7 +120,9 @@ class ExpensePresenter(
                 expenseList[index].expenseAmount,
                 expenseList[index].expenseCategory,
                 transactionName,
-                0.0
+                0.0,
+                expenseList[index].expenseDetails,
+                expenseList[index].expenseImage
             )
             transactionList.add(transactionObject)
         }
@@ -124,7 +132,7 @@ class ExpensePresenter(
         calculateDynamicBalance(orderedList, userDetails)
 
         view.layout.transactions_recycler.adapter =
-            TransactionAdapter(view.layout.context!!, orderedList)
+            TransactionAdapter(view.layout.context!!, orderedList, listener)
         view.layout.transactions_recycler.layoutManager = LinearLayoutManager(view.layout.context)
     }
 
@@ -135,8 +143,12 @@ class ExpensePresenter(
         orderedList[0].balance = userDetails.userDetails.userCurrentBalance
         orderedList[orderedList.size - 1].balance = orderedList[orderedList.size - 1].amount
         for (index in 1 until orderedList.size) {
-            if (orderedList[index].category == CategoryEnum.INCOME.getName(view.layout.context).toLowerCase().capitalize()) {
-                if (orderedList[index - 1].category == CategoryEnum.INCOME.getName(view.layout.context).toLowerCase().capitalize()) {
+            if (orderedList[index].category == CategoryEnum.INCOME.getName(view.layout.context)
+                    .toLowerCase().capitalize()
+            ) {
+                if (orderedList[index - 1].category == CategoryEnum.INCOME.getName(view.layout.context)
+                        .toLowerCase().capitalize()
+                ) {
                     orderedList[index].balance =
                         orderedList[index - 1].balance - orderedList[index - 1].amount
                 } else {
@@ -153,4 +165,9 @@ class ExpensePresenter(
         return orderedList
     }
 
+    private fun itemClickAction() {
+        onItemClick.observeOn(rxSchedulers.androidUI())
+            .subscribe({ it -> view.showDialog(it) }, { Timber.i(it.localizedMessage) })
+            .disposeBy(compositeDisposables)
+    }
 }

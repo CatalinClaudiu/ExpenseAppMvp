@@ -32,9 +32,8 @@ class CurrencyConverterPresenter(
     }
 
    private fun getCurrency(): Disposable {
-       return Observable.just(converterAPI.allCurrency)
+       return converterAPI.allCurrency
            .subscribeOn(rxSchedulers.background())
-           .flatMap { it }
            .observeOn(rxSchedulers.androidUI())
            .doOnError {
                Timber.e(it.localizedMessage)
