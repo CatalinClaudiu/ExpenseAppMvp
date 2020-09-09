@@ -68,6 +68,8 @@
     <string name="registred_success">Successfully Registered</string>
     <string name="registred_failed">Registration Failed</string>
     <string name="login_success">Successfully Login</string>
+    <string name="password_reset_success">Successfully Reset Password, please check your email</string>
+    <string name="password_reset_failed">Failed Reset Password</string>
     <string name="login_failed">Login Failed</string>
     <string name="permission_needed">Permission needed</string>
     <string name="camera_permission_message">This permission is needed to take photos of your invoices with the camera</string>
@@ -75,4 +77,6 @@
     <string name="hello_user">Hello %1s</string>
     <string name="retrieve_failed">Failed to retrieve info</string>
     <string name="response_received">The response was received</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="reset_password_message">We need your email to send the instructions to reset password</string>
 </resources>

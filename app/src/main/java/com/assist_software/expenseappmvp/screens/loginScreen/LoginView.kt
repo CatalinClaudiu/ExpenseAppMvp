@@ -7,6 +7,7 @@ import com.assist_software.expenseappmvp.R
 import com.assist_software.expenseappmvp.data.database.entities.User
 import com.assist_software.expenseappmvp.screens.mainScreen.HomeActivity
 import com.assist_software.expenseappmvp.screens.registerScreen.RegisterActivity
+import com.assist_software.expenseappmvp.screens.resetPasswordScreen.ResetPasswordActivity
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -22,6 +23,14 @@ class LoginView(var activity: LoginActivity) {
 
     fun goToRegisterScreen(): Observable<Any> {
         return RxView.clicks(layout.register_textView_link)
+    }
+
+    fun showResetPasswordScreen(){
+        ResetPasswordActivity.start(activity)
+    }
+
+    fun goToResetPasswordScreen(): Observable<Any>{
+        return RxView.clicks(layout.forgot_password)
     }
 
     fun showMainScreen() {

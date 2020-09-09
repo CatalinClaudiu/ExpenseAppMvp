@@ -30,6 +30,12 @@ class LoginPresenter(
             .subscribe { view.showRegisterScreen() }
     }
 
+    private fun onForgotPasswordClick():Disposable{
+        return view.goToResetPasswordScreen()
+            .throttleFirst(RegisterPresenter.THROTTLE_DURATION, TimeUnit.SECONDS)
+            .subscribe{ view.showResetPasswordScreen() }
+    }
+
     private fun loginUser(): Disposable {
         return view.loginUserClicks()
             .observeOn(rxSchedulers.androidUI())
@@ -90,7 +96,8 @@ class LoginPresenter(
             onRegisterClick(),
             loginUser(),
             getUserEmail(),
-            getUserPassword()
+            getUserPassword(),
+            onForgotPasswordClick()
         )
     }
 

@@ -129,7 +129,10 @@ class ExpensePresenter(
 
         var orderedList: List<Transaction> = transactionList.sortedByDescending { it.date }
 
-        calculateDynamicBalance(orderedList, userDetails)
+        if(orderedList.isNotEmpty()){
+            calculateDynamicBalance(orderedList, userDetails)
+        }
+
 
         view.layout.transactions_recycler.adapter =
             TransactionAdapter(view.layout.context!!, orderedList, listener)

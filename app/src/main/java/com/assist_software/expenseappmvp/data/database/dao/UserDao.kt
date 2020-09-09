@@ -30,4 +30,7 @@ interface UserDao {
     @Transaction
     @Query("SELECT * FROM users WHERE uid=:uid")
     fun getUserExpenses(uid: String): UserWithExpenses
+
+    @Query("UPDATE users SET userPassword=:password WHERE userEmail = :email")
+    fun updatePassword(password: String, email: String)
 }
