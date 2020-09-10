@@ -1,16 +1,16 @@
 package com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense
 
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.assist_software.expenseappmvp.R
 import com.assist_software.expenseappmvp.data.database.entities.Expense
 import com.assist_software.expenseappmvp.data.database.entities.Income
 import com.assist_software.expenseappmvp.data.database.models.UserWithExpenses
 import com.assist_software.expenseappmvp.data.database.repositories.ExpenseRepository
+import com.assist_software.expenseappmvp.data.database.repositories.IncomeRepository
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
 import com.assist_software.expenseappmvp.screens.addActionScreen.enum.CategoryEnum
-import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.TransactionAdapter
+import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.FragmentDialogListener
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.models.Transaction
 import com.assist_software.expenseappmvp.utils.DateUtils
 import com.assist_software.expenseappmvp.utils.SharedPrefUtils
@@ -18,7 +18,6 @@ import com.assist_software.expenseappmvp.utils.disposeBy
 import com.trinnguyen.SegmentView
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.fragment_expenses.view.*
 import timber.log.Timber
 import java.util.*
 
@@ -27,9 +26,10 @@ class ExpensePresenter(
     private val sharedPref: SharedPrefUtils,
     private val rxSchedulers: RxSchedulers,
     private val userRepository: UserRepository,
+    private val incomeRepository: IncomeRepository,
     private val expenseRepository: ExpenseRepository,
     private val compositeDisposables: CompositeDisposable
-) : SegmentView.OnSegmentItemSelectedListener {
+) : SegmentView.OnSegmentItemSelectedListener, FragmentDialogListener {
 
     private var endDay: Long = 0
     private var uid: String = ""
@@ -100,6 +100,7 @@ class ExpensePresenter(
                 view.layout.context?.getString(R.string.income) ?: String.toString()
 
             val transactionObject = Transaction(
+                incomeList[index].incomeId,
                 incomeList[index].incomeDate,
                 incomeList[index].incomeAmount,
                 incomeList[index].incomeCategory,
@@ -116,6 +117,7 @@ class ExpensePresenter(
                 view.layout.context?.getString(R.string.expense) ?: String.toString()
 
             val transactionObject = Transaction(
+                expenseList[index].expenseId,
                 expenseList[index].expenseDate,
                 expenseList[index].expenseAmount,
                 expenseList[index].expenseCategory,
@@ -129,14 +131,12 @@ class ExpensePresenter(
 
         var orderedList: List<Transaction> = transactionList.sortedByDescending { it.date }
 
-        if(orderedList.isNotEmpty()){
+        if (orderedList.isNotEmpty()) {
             calculateDynamicBalance(orderedList, userDetails)
         }
 
 
-        view.layout.transactions_recycler.adapter =
-            TransactionAdapter(view.layout.context!!, orderedList, listener)
-        view.layout.transactions_recycler.layoutManager = LinearLayoutManager(view.layout.context)
+        view.initAdapter(orderedList, listener)
     }
 
     private fun calculateDynamicBalance(
@@ -170,7 +170,25 @@ class ExpensePresenter(
 
     private fun itemClickAction() {
         onItemClick.observeOn(rxSchedulers.androidUI())
-            .subscribe({ it -> view.showDialog(it) }, { Timber.i(it.localizedMessage) })
+            .subscribe(
+                {
+                    view.showDialog(it, this)
+                },
+                { Timber.i(it.localizedMessage) })
             .disposeBy(compositeDisposables)
+    }
+
+    override fun onDeleteClick(transactionItem: Transaction) {
+        val index = view.getAdapterItemList()
+            .indexOfFirst { t -> t.transactionId == transactionItem.transactionId }
+        if (index != -1) {
+            when (transactionItem.category) {
+                CategoryEnum.INCOME.getName(view.layout.context).toLowerCase()
+                    .capitalize()
+                -> incomeRepository.deleteIncomeById(transactionItem.transactionId)
+                else -> expenseRepository.deleteExpenseById(transactionItem.transactionId)
+            }
+            view.removeItemFromAdapter(index)
+        }
     }
 }

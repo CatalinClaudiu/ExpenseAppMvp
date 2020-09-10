@@ -17,7 +17,7 @@ import io.reactivex.subjects.PublishSubject
 
 class TransactionAdapter(
     private val context: Context,
-    private val arrayList: List<Transaction>,
+    private val arrayList: MutableList<Transaction>,
     private val transactionAdapterListener: PublishSubject<Transaction>
 ) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
@@ -94,5 +94,12 @@ class TransactionAdapter(
         val transactionName: TextView = itemView.findViewById(R.id.transaction_name_textView)
         val balanceValue: TextView = itemView.findViewById(R.id.balance_value_textView)
         val transactionBox: ConstraintLayout = itemView.findViewById(R.id.transaction_item)
+    }
+
+    fun getList(): List<Transaction> = arrayList
+
+    fun removeItem(index: Int) {
+        arrayList.removeAt(index)
+        notifyItemRemoved(index)
     }
 }

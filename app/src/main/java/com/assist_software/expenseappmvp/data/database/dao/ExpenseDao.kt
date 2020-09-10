@@ -18,4 +18,7 @@ interface ExpenseDao {
 
     @Query("SELECT SUM(expenseAmount) FROM expenses WHERE expenseDate BETWEEN :startDate AND :endDate AND uid=:uid GROUP BY :uid")
     fun getUserExpenseByDate(startDate: Long, endDate: Long, uid: String): Maybe<Double>
+
+    @Query("DELETE FROM expenses WHERE expenseId = :expenseId")
+    fun deleteExpenseById(expenseId: Long)
 }

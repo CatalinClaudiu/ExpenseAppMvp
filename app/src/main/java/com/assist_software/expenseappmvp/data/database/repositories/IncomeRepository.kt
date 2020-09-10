@@ -12,4 +12,8 @@ class IncomeRepository(private val db: AppDatabase) {
     fun insertIncome(income: Income): Single<Long> {
         return db.incomeDao().insertOrUpdateIncome(income)
     }
+
+    fun deleteIncomeById(incomeId: Long){
+        return db.incomeDao().deleteIncomeById(incomeId)
+    }
 }

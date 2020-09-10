@@ -1,5 +1,6 @@
 package com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.dialog
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -8,14 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.assist_software.expenseappmvp.R
+import com.assist_software.expenseappmvp.screens.addActionScreen.AddActionActivity
 import com.assist_software.expenseappmvp.screens.addActionScreen.enum.CategoryEnum
+import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.FragmentDialogListener
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.models.Transaction
 import com.assist_software.expenseappmvp.utils.TimeUtils
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.category_item.view.*
 import kotlinx.android.synthetic.main.dialog_transaction_info.view.*
 
 
-class ExpenseDialog(private var transaction: Transaction) : DialogFragment() {
+class ExpenseDialog(
+    private var transaction: Transaction,
+    private val listener: FragmentDialogListener
+) : DialogFragment() {
     private lateinit var layout: View
 
     override fun onCreateView(
@@ -25,11 +32,11 @@ class ExpenseDialog(private var transaction: Transaction) : DialogFragment() {
         layout = inflater.inflate(R.layout.dialog_transaction_info, container, false)
 
         initComponents(transaction)
+        initButtons()
         return layout
     }
 
     private fun initComponents(transaction: Transaction) {
-        layout.close_dialog_btn.setOnClickListener { dialog?.dismiss() }
         layout.category_name.text = transaction.category
         when (transaction.category) {
             CategoryEnum.INCOME.getName(layout.context).toLowerCase().capitalize() -> {
@@ -60,12 +67,32 @@ class ExpenseDialog(private var transaction: Transaction) : DialogFragment() {
         layout.dialog_date_editText.setText(TimeUtils.gmtToLocalTime(transaction.date))
         layout.dialog_amount_editText.setText(transaction.amount.toString())
         layout.dialog_details_editText.setText(transaction.details)
-        if(transaction.imageDetails.isNotEmpty()){
+        if (transaction.imageDetails.isNotEmpty()) {
             layout.dialog_details_ImageView.setImageBitmap(byteArrayToImage(transaction.imageDetails))
         }
     }
 
-    private fun byteArrayToImage(bytArray: ByteArray): Bitmap{
+    private fun initButtons() {
+        layout.close_dialog_btn.setOnClickListener { dialog?.dismiss() }
+        layout.dialog_delete_textView.setOnClickListener(deleteOnClickListener)
+        layout.dialog_edit_textView.setOnClickListener(editOnClickListener)
+    }
+
+    private fun byteArrayToImage(bytArray: ByteArray): Bitmap {
         return BitmapFactory.decodeByteArray(bytArray, 0, bytArray.size)
+    }
+
+    private val deleteOnClickListener = View.OnClickListener {
+        listener.onDeleteClick(transaction)
+        dialog?.dismiss()
+    }
+
+    private val editOnClickListener = View.OnClickListener {
+        val intent = Intent(context, AddActionActivity::class.java).apply {
+            putExtra("transaction",
+                Gson().toJson(transaction))
+        }
+        startActivity(intent)
+        dialog?.dismiss()
     }
 }

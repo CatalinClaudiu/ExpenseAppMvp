@@ -10,6 +10,7 @@ import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
 import com.assist_software.expenseappmvp.screens.addActionScreen.adapter.models.CategoryItem
 import com.assist_software.expenseappmvp.screens.addActionScreen.enum.CategoryEnum
+import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.models.Transaction
 import com.assist_software.expenseappmvp.utils.SharedPrefUtils
 import com.assist_software.expenseappmvp.utils.disposeBy
 import com.tbruyelle.rxpermissions2.RxPermissions
@@ -31,8 +32,11 @@ class AddActionPresenter(
 ) {
     private val onItemClick = PublishSubject.create<CategoryItem>()
     private var categorySelected: String = view.activity.getString(R.string.income)
+    private var isEdit: Boolean = false
+    lateinit var transaction: Transaction
 
     fun onCreate() {
+        isEdit = this::transaction.isInitialized
         itemClickAction()
         view.initCategoryGrid(onItemClick, setCategoryData())
         compositeDisposables.addAll(
@@ -43,6 +47,7 @@ class AddActionPresenter(
             cameraPermission()
         )
         saveAction()
+        convertToEditScreen(isEdit)
     }
 
     fun onDestroy() {
@@ -182,6 +187,30 @@ class AddActionPresenter(
                     Timber.e(it.localizedMessage)
                 })
                 .disposeBy(compositeDisposables)
+        }
+    }
+
+    private fun populateCategoryData(transaction: Transaction): List<CategoryItem> {
+        val list: MutableList<CategoryItem> = mutableListOf()
+        enumValues<CategoryEnum>().forEach { it ->
+            val selected = it.getName(view.activity)
+                .equals(transaction.category, true)
+            list.add(
+                CategoryItem(
+                    it.getIcon(view.activity),
+                    it.getName(view.activity),
+                    selected
+                )
+            )
+        }
+        return list
+    }
+
+    private fun convertToEditScreen(isEdit: Boolean) {
+        if(isEdit){
+            view.changeTitle()
+            view.populateEditScreen(transaction)
+            view.initCategoryGrid(onItemClick, populateCategoryData(transaction))
         }
     }
 }

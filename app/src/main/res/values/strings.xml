@@ -79,4 +79,5 @@
     <string name="response_received">The response was received</string>
     <string name="reset_password">Reset Password</string>
     <string name="reset_password_message">We need your email to send the instructions to reset password</string>
+    <string name="edit_action">Edit action</string>
 </resources>

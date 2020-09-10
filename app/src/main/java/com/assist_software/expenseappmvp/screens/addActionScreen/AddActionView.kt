@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import android.widget.ImageView
@@ -16,6 +17,8 @@ import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.screens.addActionScreen.adapter.CategoryAdapter
 import com.assist_software.expenseappmvp.screens.addActionScreen.adapter.models.CategoryItem
 import com.assist_software.expenseappmvp.screens.mainScreen.HomeActivity
+import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.models.Transaction
+import com.assist_software.expenseappmvp.utils.TimeUtils
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -28,7 +31,7 @@ class AddActionView(var activity: AddActionActivity) {
     val layout: View = View.inflate(activity, R.layout.activity_add_action, null)
     private val c = Calendar.getInstance()
 
-    var defaultDetailsText: String = ""
+    private var defaultDetailsText: String = ""
 
     fun showHomeScreen() {
         HomeActivity.start(activity)
@@ -183,5 +186,17 @@ class AddActionView(var activity: AddActionActivity) {
             returnArray = stream.toByteArray()
         }
         return returnArray
+    }
+
+    fun changeTitle(){
+        val toolbar = layout.toolbar as Toolbar
+        toolbar.title = layout.context.getString(R.string.edit_action)
+    }
+
+    fun populateEditScreen(transaction: Transaction) {
+        layout.date_EditText.setText(TimeUtils.gmtToLocalTime(transaction.date))
+        layout.amount_EditText.setText(transaction.amount.toString())
+        layout.details_EditText.setText(transaction.details)
+        layout.details_ImageView.setImageBitmap(BitmapFactory.decodeByteArray(transaction.imageDetails, 0, transaction.imageDetails.size))
     }
 }

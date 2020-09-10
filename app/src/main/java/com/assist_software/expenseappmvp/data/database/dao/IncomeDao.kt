@@ -1,9 +1,6 @@
 package com.assist_software.expenseappmvp.data.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.assist_software.expenseappmvp.data.database.entities.Income
 import io.reactivex.Single
 
@@ -14,4 +11,7 @@ interface IncomeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrUpdateIncome(income: Income): Single<Long>
+
+    @Query("DELETE FROM incomes WHERE incomeId = :incomeId")
+    fun deleteIncomeById(incomeId: Long)
 }
