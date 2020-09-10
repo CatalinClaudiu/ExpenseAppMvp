@@ -53,6 +53,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBarNoFullScreen"
             android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".screens.resetPasswordScreen.ResetPasswordActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBarNoFullScreen"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

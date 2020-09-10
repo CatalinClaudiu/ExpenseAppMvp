@@ -21,11 +21,15 @@ class UserRepository(private val db: AppDatabase) {
         return db.userDao().getUserBalance(uid)
     }
 
-    fun getUserName(uid: String): Single<String>{
+    fun getUserName(uid: String): Single<String> {
         return db.userDao().getUserName(uid)
     }
 
-    fun loadUserWithExpenses(uid: String): UserWithExpenses{
+    fun loadUserWithExpenses(uid: String): UserWithExpenses {
         return db.userDao().getUserExpenses(uid)
+    }
+
+    fun updateUserPassword(password: String, email: String){
+        return db.userDao().updatePassword(password, email)
     }
 }

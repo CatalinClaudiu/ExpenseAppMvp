@@ -30,6 +30,12 @@ class LoginPresenter(
             .subscribe { view.showRegisterScreen() }
     }
 
+    private fun onForgotPasswordClick(): Disposable {
+        return view.goToResetPasswordScreen()
+            .throttleFirst(RegisterPresenter.THROTTLE_DURATION, TimeUnit.SECONDS)
+            .subscribe { view.showResetPasswordScreen() }
+    }
+
     private fun loginUser(): Disposable {
         return view.loginUserClicks()
             .observeOn(rxSchedulers.androidUI())
@@ -79,18 +85,29 @@ class LoginPresenter(
             .observeOn(rxSchedulers.background())
             .doOnSuccess {
                 sharedPref.write(Constants.USER_ID, it)
-                view.showMainScreen()
+                updateUserPassword(user.userPassword, email) //new implementation
+                //view.showMainScreen() // old implementation
             }
             .observeOn(rxSchedulers.androidUI())
             .subscribe()
     }
+
+    //Function to update the password in the local database even tho we never use the local saved password
+    private fun updateUserPassword(password: String, email: String): Disposable {
+        return Observable.just(userRepository.updateUserPassword(password, email))
+            .subscribeOn(rxSchedulers.background())
+            .observeOn(rxSchedulers.androidUI())
+            .subscribe { view.showMainScreen() }
+    }
+//--------------------------------------------------------------------------------------------------------------
 
     fun onCreate() {
         compositeDisposables.addAll(
             onRegisterClick(),
             loginUser(),
             getUserEmail(),
-            getUserPassword()
+            getUserPassword(),
+            onForgotPasswordClick()
         )
     }
 
