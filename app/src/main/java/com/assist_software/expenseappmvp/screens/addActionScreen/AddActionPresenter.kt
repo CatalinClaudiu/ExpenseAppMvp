@@ -5,7 +5,6 @@ import android.widget.Toast
 import com.assist_software.expenseappmvp.R
 import com.assist_software.expenseappmvp.data.database.repositories.ExpenseRepository
 import com.assist_software.expenseappmvp.data.database.repositories.IncomeRepository
-import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
 import com.assist_software.expenseappmvp.screens.addActionScreen.adapter.models.CategoryItem
@@ -24,7 +23,6 @@ class AddActionPresenter(
     private val view: AddActionView,
     private val rxSchedulers: RxSchedulers,
     private val rxPermissions: RxPermissions,
-    private val userRepository: UserRepository,
     private val incomeRepository: IncomeRepository,
     private val expenseRepository: ExpenseRepository,
     private val sharedPref: SharedPrefUtils,
@@ -252,7 +250,9 @@ class AddActionPresenter(
             expenseRepository.editExpense(transaction.transactionId, expense.expenseAmount)
                 .observeOn(rxSchedulers.background())
                 .flatMap {
-                    expenseRepository.editUserBalance(this, expense.expenseAmount, transaction.amount)
+                    expenseRepository.editUserBalance(this,
+                        expense.expenseAmount,
+                        transaction.amount)
                 }
                 .observeOn(rxSchedulers.androidUI())
                 .subscribe({
@@ -268,32 +268,32 @@ class AddActionPresenter(
         return expenseRepository.getExpenseImage(transaction.transactionId)
             .subscribeOn(rxSchedulers.background())
             .observeOn(rxSchedulers.androidUI())
-            .subscribe({ view.populateEditScreen(transaction, it)},{it.localizedMessage})
+            .subscribe({ view.populateEditScreen(transaction, it) }, { it.localizedMessage })
             .disposeBy(compositeDisposables)
     }
 
-    private fun getIncomeImage(){
+    private fun getIncomeImage() {
         return incomeRepository.getIncomeImage(transaction.transactionId)
             .subscribeOn(rxSchedulers.background())
             .observeOn(rxSchedulers.androidUI())
-            .subscribe({ view.populateEditScreen(transaction, it)},{it.localizedMessage})
+            .subscribe({ view.populateEditScreen(transaction, it) }, { it.localizedMessage })
             .disposeBy(compositeDisposables)
     }
 
     private fun convertToEditScreen(isEdit: Boolean) {
-        if(isEdit){
+        if (isEdit) {
             view.changeTitle()
-            if(transaction.category == CategoryEnum.INCOME.getName(view.layout.context).toLowerCase().capitalize()){
-               getIncomeImage()
-            }
-            else{
+            if (transaction.category == CategoryEnum.INCOME.getName(view.layout.context)
+                    .toLowerCase().capitalize()
+            ) {
+                getIncomeImage()
+            } else {
                 getExpenseImage()
             }
             view.initCategoryGrid(onItemClick, populateCategoryData(transaction))
             categorySelected = transaction.category
             saveEditAction()
-        }
-        else{
+        } else {
             saveAction()
         }
     }

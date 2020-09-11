@@ -3,7 +3,6 @@ package com.assist_software.expenseappmvp.screens.registerScreen
 import com.assist_software.expenseappmvp.application.builder.AppComponent
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
-import com.assist_software.expenseappmvp.utils.SharedPrefUtils
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Component
 import dagger.Module

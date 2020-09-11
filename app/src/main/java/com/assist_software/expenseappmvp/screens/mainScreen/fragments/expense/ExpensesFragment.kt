@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.assist_software.expenseappmvp.application.ExpenseApp
 import com.assist_software.expenseappmvp.screens.mainScreen.HomeActivity

@@ -8,22 +8,17 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.assist_software.expenseappmvp.R
 import com.assist_software.expenseappmvp.data.database.entities.Expense
-import com.assist_software.expenseappmvp.data.database.models.UserWithExpenses
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.FragmentDialogListener
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.TransactionAdapter
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.models.Transaction
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.dialog.ExpenseDialog
-import com.assist_software.expenseappmvp.utils.DateUtils
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.LegendEntry
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.*
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.fragment_budget.view.*
 import kotlinx.android.synthetic.main.fragment_expenses.view.*
 
 class ExpenseView(

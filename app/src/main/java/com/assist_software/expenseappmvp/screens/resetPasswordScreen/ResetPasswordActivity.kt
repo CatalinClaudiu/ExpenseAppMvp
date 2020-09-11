@@ -4,12 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.assist_software.expenseappmvp.R
 import com.assist_software.expenseappmvp.application.ExpenseApp
-import com.assist_software.expenseappmvp.screens.loginScreen.DaggerLoginComponent
-import com.assist_software.expenseappmvp.screens.loginScreen.LoginModule
-import com.assist_software.expenseappmvp.screens.loginScreen.LoginPresenter
-import com.assist_software.expenseappmvp.screens.loginScreen.LoginView
 import javax.inject.Inject
 
 class ResetPasswordActivity : AppCompatActivity() {
