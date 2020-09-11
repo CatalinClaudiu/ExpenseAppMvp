@@ -1,10 +1,8 @@
 package com.assist_software.expenseappmvp.screens.resetPasswordScreen
 
 import com.assist_software.expenseappmvp.data.database.entities.User
-import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
-import com.assist_software.expenseappmvp.utils.SharedPrefUtils
 import com.assist_software.expenseappmvp.utils.Validations
 import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.Observable

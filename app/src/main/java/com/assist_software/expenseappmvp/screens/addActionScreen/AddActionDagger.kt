@@ -47,7 +47,6 @@ class AddActionModule(private val activity: AddActionActivity) {
     fun presenter(
         view: AddActionView,
         rxSchedulers: RxSchedulers,
-        userRepository: UserRepository,
         incomeRepository: IncomeRepository,
         expenseRepository: ExpenseRepository,
         sharedPref: SharedPrefUtils,
@@ -58,7 +57,6 @@ class AddActionModule(private val activity: AddActionActivity) {
             view,
             rxSchedulers,
             rxPermissions,
-            userRepository,
             incomeRepository,
             expenseRepository,
             sharedPref,

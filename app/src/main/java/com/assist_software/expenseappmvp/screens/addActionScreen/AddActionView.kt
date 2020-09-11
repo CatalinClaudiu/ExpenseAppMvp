@@ -145,7 +145,7 @@ class AddActionView(var activity: AddActionActivity) {
                 day
         )
         dpd.show()
-        dpd.datePicker.maxDate = System.currentTimeMillis();
+        dpd.datePicker.maxDate = System.currentTimeMillis()
     }
 
     fun getIncome(uid: String, category: String): Income {

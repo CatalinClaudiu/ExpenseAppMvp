@@ -30,4 +30,7 @@ interface ExpenseDao {
 
     @Query("SELECT expenseImage FROM expenses WHERE expenseId = :id")
     fun getExpenseImage(id: Long): Single<ByteArray>
+
+    @Query("SELECT expenseId, uid, expenseDate, SUM(expenseAmount)  AS expenseAmount, expenseCategory, expenseDetails, expenseImage FROM expenses WHERE uid = :id AND expenseDate BETWEEN :dateStart AND :dateEnd GROUP BY expenseCategory")
+    fun getExpensesByCategoryInInterval(id: String, dateStart: Long, dateEnd: Long): MutableList<Expense>
 }

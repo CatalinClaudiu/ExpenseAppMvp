@@ -1,5 +1,6 @@
 package com.assist_software.expenseappmvp.screens.mainScreen.fragments.budget
 
+import com.assist_software.expenseappmvp.data.database.models.UserWithExpenses
 import com.assist_software.expenseappmvp.data.database.repositories.ExpenseRepository
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.Constants
@@ -29,6 +30,7 @@ class BudgetPresenter(
 
     fun onCreate() {
         initComponents()
+        view.setUpChart(loadUserWithExpenses())
         compositeDisposables.addAll(
             getCurrentBalance(),
             getTodayExpense(), getWeekExpense(), getMonthExpense()
@@ -88,5 +90,9 @@ class BudgetPresenter(
                 view.setMonthExpense(expense)
             }
             .subscribe()
+    }
+
+    private fun loadUserWithExpenses(): UserWithExpenses {
+        return userRepository.loadUserWithExpenses(uid)
     }
 }

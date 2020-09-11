@@ -33,6 +33,7 @@ class ExpensePresenter(
 
     private var endDay: Long = 0
     private var uid: String = ""
+    private val startWeek = DateUtils.getEndDate(Calendar.WEEK_OF_MONTH)
     private val onItemClick = PublishSubject.create<Transaction>()
 
     fun onCreate() {
@@ -40,6 +41,7 @@ class ExpensePresenter(
         initComponents()
         initTransactionRecyclerView(onItemClick)
         view.initSegmentComponents()
+        view.setUpChart(getDataFromDB(uid, startWeek, endDay))
         itemClickAction()
     }
 
@@ -50,16 +52,18 @@ class ExpensePresenter(
     override fun onSegmentItemSelected(index: Int) {
         when (index) {
             0 -> {
-                val startWeek = DateUtils.getEndDate(Calendar.WEEK_OF_MONTH)
                 getWeekExpense(startWeek)
+                view.setUpChart(getDataFromDB(uid, startWeek, endDay))
             }
             1 -> {
                 val startMonth = DateUtils.getEndDate(Calendar.MONTH)
                 getWeekExpense(startMonth)
+                view.setUpChart(getDataFromDB(uid, startMonth, endDay))
             }
             2 -> {
                 val startYear = DateUtils.getEndDate(Calendar.YEAR)
                 getWeekExpense(startYear)
+                view.setUpChart(getDataFromDB(uid, startYear, endDay))
             }
         }
     }
@@ -190,5 +194,13 @@ class ExpensePresenter(
             }
             view.removeItemFromAdapter(index)
         }
+    }
+
+    private fun getDataFromDB(
+        userId: String,
+        startDate: Long,
+        endDate: Long
+    ): MutableList<Expense> {
+        return expenseRepository.getExpenseByCategoryInInterval(userId, startDate, endDate)
     }
 }
