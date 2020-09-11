@@ -10,6 +10,7 @@ import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
 import com.assist_software.expenseappmvp.screens.addActionScreen.adapter.models.CategoryItem
 import com.assist_software.expenseappmvp.screens.addActionScreen.enum.CategoryEnum
+import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.models.Transaction
 import com.assist_software.expenseappmvp.utils.SharedPrefUtils
 import com.assist_software.expenseappmvp.utils.disposeBy
 import com.tbruyelle.rxpermissions2.RxPermissions
@@ -31,8 +32,11 @@ class AddActionPresenter(
 ) {
     private val onItemClick = PublishSubject.create<CategoryItem>()
     private var categorySelected: String = view.activity.getString(R.string.income)
+    private var isEdit: Boolean = false
+    lateinit var transaction: Transaction
 
     fun onCreate() {
+        isEdit = this::transaction.isInitialized
         itemClickAction()
         view.initCategoryGrid(onItemClick, setCategoryData())
         compositeDisposables.addAll(
@@ -42,7 +46,7 @@ class AddActionPresenter(
             deletePhoto(),
             cameraPermission()
         )
-        saveAction()
+        convertToEditScreen(isEdit)
     }
 
     fun onDestroy() {
@@ -182,6 +186,115 @@ class AddActionPresenter(
                     Timber.e(it.localizedMessage)
                 })
                 .disposeBy(compositeDisposables)
+        }
+    }
+
+    private fun populateCategoryData(transaction: Transaction): List<CategoryItem> {
+        val list: MutableList<CategoryItem> = mutableListOf()
+        enumValues<CategoryEnum>().forEach { it ->
+            val selected = it.getName(view.activity)
+                .equals(transaction.category, true)
+            list.add(
+                CategoryItem(
+                    it.getIcon(view.activity),
+                    it.getName(view.activity),
+                    selected
+                )
+            )
+        }
+        return list
+    }
+
+    private fun saveEditAction() {
+        return view.onSaveClick()
+            .subscribe({
+                if (categorySelected == view.activity.getString(R.string.income)) {
+                    saveEditIncomeTransaction()
+                    Toast.makeText(
+                        view.activity,
+                        view.activity.getString(R.string.budget_edited),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    saveEditExpenseTransaction()
+                    Toast.makeText(
+                        view.activity,
+                        view.activity.getString(R.string.expense_edited),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }, {
+                Timber.e(it.localizedMessage)
+            }).disposeBy(compositeDisposables)
+    }
+
+    private fun saveEditIncomeTransaction() {
+        sharedPref.read(Constants.USER_ID, "")?.run {
+            val income = view.getIncome(this, categorySelected)
+            incomeRepository.editIncome(transaction.transactionId, income.incomeAmount)
+                .observeOn(rxSchedulers.background())
+                .flatMap {
+                    incomeRepository.editUserBalance(this, income.incomeAmount, transaction.amount)
+                }
+                .observeOn(rxSchedulers.androidUI())
+                .subscribe({
+                    view.showHomeScreen()
+                }, {
+                    Timber.e(it.localizedMessage)
+                })
+                .disposeBy(compositeDisposables)
+        }
+    }
+
+    private fun saveEditExpenseTransaction() {
+        sharedPref.read(Constants.USER_ID, "")?.run {
+            val expense = view.getExpense(this, categorySelected)
+            expenseRepository.editExpense(transaction.transactionId, expense.expenseAmount)
+                .observeOn(rxSchedulers.background())
+                .flatMap {
+                    expenseRepository.editUserBalance(this, expense.expenseAmount, transaction.amount)
+                }
+                .observeOn(rxSchedulers.androidUI())
+                .subscribe({
+                    view.showHomeScreen()
+                }, {
+                    Timber.e(it.localizedMessage)
+                })
+                .disposeBy(compositeDisposables)
+        }
+    }
+
+    private fun getExpenseImage() {
+        return expenseRepository.getExpenseImage(transaction.transactionId)
+            .subscribeOn(rxSchedulers.background())
+            .observeOn(rxSchedulers.androidUI())
+            .subscribe({ view.populateEditScreen(transaction, it)},{it.localizedMessage})
+            .disposeBy(compositeDisposables)
+    }
+
+    private fun getIncomeImage(){
+        return incomeRepository.getIncomeImage(transaction.transactionId)
+            .subscribeOn(rxSchedulers.background())
+            .observeOn(rxSchedulers.androidUI())
+            .subscribe({ view.populateEditScreen(transaction, it)},{it.localizedMessage})
+            .disposeBy(compositeDisposables)
+    }
+
+    private fun convertToEditScreen(isEdit: Boolean) {
+        if(isEdit){
+            view.changeTitle()
+            if(transaction.category == CategoryEnum.INCOME.getName(view.layout.context).toLowerCase().capitalize()){
+               getIncomeImage()
+            }
+            else{
+                getExpenseImage()
+            }
+            view.initCategoryGrid(onItemClick, populateCategoryData(transaction))
+            categorySelected = transaction.category
+            saveEditAction()
+        }
+        else{
+            saveAction()
         }
     }
 }

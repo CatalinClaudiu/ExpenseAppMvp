@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.assist_software.expenseappmvp.application.ExpenseApp
+import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.models.Transaction
+import com.google.gson.Gson
 import javax.inject.Inject
 
 class AddActionActivity : AppCompatActivity() {
@@ -21,6 +23,7 @@ class AddActionActivity : AppCompatActivity() {
             .addActionModule(AddActionModule(this)).build().inject(this)
 
         setContentView(view.layout)
+        getBundleContent()
         view.initToolbar()
         presenter.onCreate()
     }
@@ -39,6 +42,12 @@ class AddActionActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         presenter.onDestroy()
+    }
+
+    private fun getBundleContent() {
+        val transaction = intent.getStringExtra("transaction")
+        if (transaction != null)
+            presenter.transaction = Gson().fromJson(transaction, Transaction::class.java)
     }
 
     companion object {

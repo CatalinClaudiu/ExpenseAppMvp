@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import android.widget.ImageView
@@ -16,6 +17,8 @@ import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.screens.addActionScreen.adapter.CategoryAdapter
 import com.assist_software.expenseappmvp.screens.addActionScreen.adapter.models.CategoryItem
 import com.assist_software.expenseappmvp.screens.mainScreen.HomeActivity
+import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.models.Transaction
+import com.assist_software.expenseappmvp.utils.TimeUtils
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -28,7 +31,8 @@ class AddActionView(var activity: AddActionActivity) {
     val layout: View = View.inflate(activity, R.layout.activity_add_action, null)
     private val c = Calendar.getInstance()
 
-    var defaultDetailsText: String = ""
+    private var defaultDetailsText: String = ""
+    private var defaultDetailsImage: ByteArray = ByteArray(0)
 
     fun showHomeScreen() {
         HomeActivity.start(activity)
@@ -148,6 +152,9 @@ class AddActionView(var activity: AddActionActivity) {
         if (layout.amount_EditText.text.toString() != null) {
             defaultDetailsText = layout.details_EditText.text.toString()
         }
+        if(layout.details_ImageView != null){
+            defaultDetailsImage = imageToBitmap(layout.details_ImageView)
+        }
         val amount = if (layout.amount_EditText.text.toString().isEmpty()) 0.0 else layout.amount_EditText.text.toString().toDouble()
         return Income(
                 uid = uid,
@@ -155,13 +162,16 @@ class AddActionView(var activity: AddActionActivity) {
                 incomeAmount = amount,
                 incomeCategory = category,
                 incomeDetails = defaultDetailsText,
-                incomeImage = imageToBitmap(layout.details_ImageView)
+                incomeImage = defaultDetailsImage
         )
     }
 
     fun getExpense(uid: String, category: String): Expense {
         if (layout.amount_EditText.text.toString().isNotEmpty()) {
             defaultDetailsText = layout.details_EditText.text.toString()
+        }
+        if(layout.details_ImageView != null){
+            defaultDetailsImage = imageToBitmap(layout.details_ImageView)
         }
         val amount = if (layout.amount_EditText.text.toString().isEmpty()) 0.0 else layout.amount_EditText.text.toString().toDouble()
         return Expense(
@@ -170,18 +180,30 @@ class AddActionView(var activity: AddActionActivity) {
                 expenseAmount = amount,
                 expenseCategory = category,
                 expenseDetails = defaultDetailsText,
-                expenseImage = imageToBitmap(layout.details_ImageView)
+                expenseImage = defaultDetailsImage
         )
     }
 
     private fun imageToBitmap(image: ImageView): ByteArray {
         var returnArray = ByteArray(0)
-        if (image.drawable != null) {
+        if (image.drawable != null && (image.drawable as BitmapDrawable).bitmap != null) {
             val bitmap = (image.drawable as BitmapDrawable).bitmap
             val stream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
             returnArray = stream.toByteArray()
         }
         return returnArray
+    }
+
+    fun changeTitle(){
+        val toolbar = layout.toolbar as Toolbar
+        toolbar.title = layout.context.getString(R.string.edit_action)
+    }
+
+    fun populateEditScreen(transaction: Transaction, image: ByteArray) {
+        layout.date_EditText.setText(TimeUtils.gmtToLocalTime(transaction.date))
+        layout.amount_EditText.setText(transaction.amount.toString())
+        layout.details_EditText.setText(transaction.details)
+        layout.details_ImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.size))
     }
 }
