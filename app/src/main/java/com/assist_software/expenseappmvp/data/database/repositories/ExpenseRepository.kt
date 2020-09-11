@@ -33,4 +33,8 @@ class ExpenseRepository(private val db: AppDatabase) {
     fun getExpenseImage(id: Long): Single<ByteArray>{
         return db.expenseDao().getExpenseImage(id)
     }
+
+    fun getExpenseByCategoryInInterval(id: String, dateStart: Long, dateEnd: Long): MutableList<Expense>{
+        return db.expenseDao().getExpensesByCategoryInInterval(id, dateStart, dateEnd)
+    }
 }
