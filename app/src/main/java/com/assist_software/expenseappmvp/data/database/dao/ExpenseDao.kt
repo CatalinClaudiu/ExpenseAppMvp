@@ -21,4 +21,13 @@ interface ExpenseDao {
 
     @Query("DELETE FROM expenses WHERE expenseId = :expenseId")
     fun deleteExpenseById(expenseId: Long)
+
+    @Query("UPDATE expenses SET expenseAmount = :new_expense WHERE expenseId = :id")
+    fun editExpense(id: Long, new_expense: Double): Single<Int>
+
+    @Query("UPDATE users SET userCurrentBalance = userCurrentBalance + :old_value - :new_expense WHERE uid = :id")
+    fun editUserExpense(id: String, new_expense: Double, old_value: Double): Single<Int>
+
+    @Query("SELECT expenseImage FROM expenses WHERE expenseId = :id")
+    fun getExpenseImage(id: Long): Single<ByteArray>
 }

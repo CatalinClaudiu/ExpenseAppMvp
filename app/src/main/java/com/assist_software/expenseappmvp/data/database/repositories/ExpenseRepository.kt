@@ -21,4 +21,16 @@ class ExpenseRepository(private val db: AppDatabase) {
     fun deleteExpenseById(expenseId: Long) {
         return db.expenseDao().deleteExpenseById(expenseId)
     }
+
+    fun editExpense(id: Long, new_expense: Double): Single<Int>{
+        return db.expenseDao().editExpense(id, new_expense)
+    }
+
+    fun editUserBalance(uid: String, new_expense: Double, old_value: Double): Single<Int>{
+        return db.expenseDao().editUserExpense(uid, new_expense, old_value)
+    }
+
+    fun getExpenseImage(id: Long): Single<ByteArray>{
+        return db.expenseDao().getExpenseImage(id)
+    }
 }

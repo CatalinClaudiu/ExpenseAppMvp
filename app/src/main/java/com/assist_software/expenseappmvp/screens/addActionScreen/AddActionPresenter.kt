@@ -46,7 +46,6 @@ class AddActionPresenter(
             deletePhoto(),
             cameraPermission()
         )
-        saveAction()
         convertToEditScreen(isEdit)
     }
 
@@ -206,11 +205,96 @@ class AddActionPresenter(
         return list
     }
 
+    private fun saveEditAction() {
+        return view.onSaveClick()
+            .subscribe({
+                if (categorySelected == view.activity.getString(R.string.income)) {
+                    saveEditIncomeTransaction()
+                    Toast.makeText(
+                        view.activity,
+                        view.activity.getString(R.string.budget_edited),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    saveEditExpenseTransaction()
+                    Toast.makeText(
+                        view.activity,
+                        view.activity.getString(R.string.expense_edited),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }, {
+                Timber.e(it.localizedMessage)
+            }).disposeBy(compositeDisposables)
+    }
+
+    private fun saveEditIncomeTransaction() {
+        sharedPref.read(Constants.USER_ID, "")?.run {
+            val income = view.getIncome(this, categorySelected)
+            incomeRepository.editIncome(transaction.transactionId, income.incomeAmount)
+                .observeOn(rxSchedulers.background())
+                .flatMap {
+                    incomeRepository.editUserBalance(this, income.incomeAmount, transaction.amount)
+                }
+                .observeOn(rxSchedulers.androidUI())
+                .subscribe({
+                    view.showHomeScreen()
+                }, {
+                    Timber.e(it.localizedMessage)
+                })
+                .disposeBy(compositeDisposables)
+        }
+    }
+
+    private fun saveEditExpenseTransaction() {
+        sharedPref.read(Constants.USER_ID, "")?.run {
+            val expense = view.getExpense(this, categorySelected)
+            expenseRepository.editExpense(transaction.transactionId, expense.expenseAmount)
+                .observeOn(rxSchedulers.background())
+                .flatMap {
+                    expenseRepository.editUserBalance(this, expense.expenseAmount, transaction.amount)
+                }
+                .observeOn(rxSchedulers.androidUI())
+                .subscribe({
+                    view.showHomeScreen()
+                }, {
+                    Timber.e(it.localizedMessage)
+                })
+                .disposeBy(compositeDisposables)
+        }
+    }
+
+    private fun getExpenseImage() {
+        return expenseRepository.getExpenseImage(transaction.transactionId)
+            .subscribeOn(rxSchedulers.background())
+            .observeOn(rxSchedulers.androidUI())
+            .subscribe({ view.populateEditScreen(transaction, it)},{it.localizedMessage})
+            .disposeBy(compositeDisposables)
+    }
+
+    private fun getIncomeImage(){
+        return incomeRepository.getIncomeImage(transaction.transactionId)
+            .subscribeOn(rxSchedulers.background())
+            .observeOn(rxSchedulers.androidUI())
+            .subscribe({ view.populateEditScreen(transaction, it)},{it.localizedMessage})
+            .disposeBy(compositeDisposables)
+    }
+
     private fun convertToEditScreen(isEdit: Boolean) {
         if(isEdit){
             view.changeTitle()
-            view.populateEditScreen(transaction)
+            if(transaction.category == CategoryEnum.INCOME.getName(view.layout.context).toLowerCase().capitalize()){
+               getIncomeImage()
+            }
+            else{
+                getExpenseImage()
+            }
             view.initCategoryGrid(onItemClick, populateCategoryData(transaction))
+            categorySelected = transaction.category
+            saveEditAction()
+        }
+        else{
+            saveAction()
         }
     }
 }

@@ -90,7 +90,7 @@ class ExpenseDialog(
     private val editOnClickListener = View.OnClickListener {
         val intent = Intent(context, AddActionActivity::class.java).apply {
             putExtra("transaction",
-                Gson().toJson(transaction))
+                Gson().toJson(transaction.apply { imageDetails = ByteArray(0) }))
         }
         startActivity(intent)
         dialog?.dismiss()

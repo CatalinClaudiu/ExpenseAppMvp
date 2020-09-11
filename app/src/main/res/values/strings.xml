@@ -33,7 +33,9 @@
     <string name="hint_amount">Insert Amount</string>
     <string name="hint_details">Insert Details</string>
     <string name="budget_saved">New Budget saved</string>
+    <string name="budget_edited">New Budget edited</string>
     <string name="expense_saved">New Expense saved</string>
+    <string name="expense_edited">New Expense edited</string>
     <string name="add_budget">Add Budget</string>
     <string name="add_expense">Add Expense</string>
     <string name="base_information">Base information</string>

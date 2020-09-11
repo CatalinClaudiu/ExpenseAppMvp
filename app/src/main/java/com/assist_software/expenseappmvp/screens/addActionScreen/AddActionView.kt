@@ -32,6 +32,7 @@ class AddActionView(var activity: AddActionActivity) {
     private val c = Calendar.getInstance()
 
     private var defaultDetailsText: String = ""
+    private var defaultDetailsImage: ByteArray = ByteArray(0)
 
     fun showHomeScreen() {
         HomeActivity.start(activity)
@@ -151,6 +152,9 @@ class AddActionView(var activity: AddActionActivity) {
         if (layout.amount_EditText.text.toString() != null) {
             defaultDetailsText = layout.details_EditText.text.toString()
         }
+        if(layout.details_ImageView != null){
+            defaultDetailsImage = imageToBitmap(layout.details_ImageView)
+        }
         val amount = if (layout.amount_EditText.text.toString().isEmpty()) 0.0 else layout.amount_EditText.text.toString().toDouble()
         return Income(
                 uid = uid,
@@ -158,13 +162,16 @@ class AddActionView(var activity: AddActionActivity) {
                 incomeAmount = amount,
                 incomeCategory = category,
                 incomeDetails = defaultDetailsText,
-                incomeImage = imageToBitmap(layout.details_ImageView)
+                incomeImage = defaultDetailsImage
         )
     }
 
     fun getExpense(uid: String, category: String): Expense {
         if (layout.amount_EditText.text.toString().isNotEmpty()) {
             defaultDetailsText = layout.details_EditText.text.toString()
+        }
+        if(layout.details_ImageView != null){
+            defaultDetailsImage = imageToBitmap(layout.details_ImageView)
         }
         val amount = if (layout.amount_EditText.text.toString().isEmpty()) 0.0 else layout.amount_EditText.text.toString().toDouble()
         return Expense(
@@ -173,13 +180,13 @@ class AddActionView(var activity: AddActionActivity) {
                 expenseAmount = amount,
                 expenseCategory = category,
                 expenseDetails = defaultDetailsText,
-                expenseImage = imageToBitmap(layout.details_ImageView)
+                expenseImage = defaultDetailsImage
         )
     }
 
     private fun imageToBitmap(image: ImageView): ByteArray {
         var returnArray = ByteArray(0)
-        if (image.drawable != null) {
+        if (image.drawable != null && (image.drawable as BitmapDrawable).bitmap != null) {
             val bitmap = (image.drawable as BitmapDrawable).bitmap
             val stream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
@@ -193,10 +200,10 @@ class AddActionView(var activity: AddActionActivity) {
         toolbar.title = layout.context.getString(R.string.edit_action)
     }
 
-    fun populateEditScreen(transaction: Transaction) {
+    fun populateEditScreen(transaction: Transaction, image: ByteArray) {
         layout.date_EditText.setText(TimeUtils.gmtToLocalTime(transaction.date))
         layout.amount_EditText.setText(transaction.amount.toString())
         layout.details_EditText.setText(transaction.details)
-        layout.details_ImageView.setImageBitmap(BitmapFactory.decodeByteArray(transaction.imageDetails, 0, transaction.imageDetails.size))
+        layout.details_ImageView.setImageBitmap(BitmapFactory.decodeByteArray(image, 0, image.size))
     }
 }
