@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.assist_software.expenseappmvp.R
 import com.assist_software.expenseappmvp.data.database.entities.Expense
-import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.FragmentDialogListener
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.TransactionAdapter
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.models.Transaction
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.dialog.ExpenseDialog
@@ -39,9 +38,12 @@ class ExpenseView(
         layout.total_expense_value.text = expense.toString()
     }
 
-    fun showDialog(transaction: Transaction, listener: FragmentDialogListener) {
+    fun showDialog(
+        transaction: Transaction/*, listener: FragmentDialogListener*/,
+        onItemDelete: PublishSubject<Transaction>
+    ) {
         val fm: FragmentManager = fragment.childFragmentManager
-        val dialogFragment = ExpenseDialog(transaction, listener)
+        val dialogFragment = ExpenseDialog(transaction, onItemDelete)
         dialogFragment.show(fm, "fragmentDialog")
     }
 

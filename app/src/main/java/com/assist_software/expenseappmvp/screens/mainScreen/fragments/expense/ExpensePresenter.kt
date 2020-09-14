@@ -10,7 +10,6 @@ import com.assist_software.expenseappmvp.data.database.repositories.UserReposito
 import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
 import com.assist_software.expenseappmvp.screens.addActionScreen.enum.CategoryEnum
-import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.FragmentDialogListener
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.models.Transaction
 import com.assist_software.expenseappmvp.utils.DateUtils
 import com.assist_software.expenseappmvp.utils.SharedPrefUtils
@@ -29,12 +28,13 @@ class ExpensePresenter(
     private val incomeRepository: IncomeRepository,
     private val expenseRepository: ExpenseRepository,
     private val compositeDisposables: CompositeDisposable
-) : SegmentView.OnSegmentItemSelectedListener, FragmentDialogListener {
+) : SegmentView.OnSegmentItemSelectedListener/*, FragmentDialogListener*/ {
 
     private var endDay: Long = 0
     private var uid: String = ""
     private val startWeek = DateUtils.getEndDate(Calendar.WEEK_OF_MONTH)
     private val onItemClick = PublishSubject.create<Transaction>()
+    private val onItemDelete = PublishSubject.create<Transaction>()
 
     fun onCreate() {
 
@@ -43,6 +43,7 @@ class ExpensePresenter(
         view.initSegmentComponents()
         view.setUpChart(getDataFromDB(uid, startWeek, endDay))
         itemClickAction()
+        deleteItemFormRecycler()
     }
 
     fun onDestroy() {
@@ -176,26 +177,49 @@ class ExpensePresenter(
         onItemClick.observeOn(rxSchedulers.androidUI())
             .subscribe(
                 {
-                    view.showDialog(it, this)
+                    view.showDialog(it, onItemDelete)
                 },
                 { Timber.i(it.localizedMessage) })
             .disposeBy(compositeDisposables)
     }
 
-    override fun onDeleteClick(transactionItem: Transaction) {
-        val index = view.getAdapterItemList()
-            .indexOfFirst { t -> t.transactionId == transactionItem.transactionId }
-        if (index != -1) {
-            when (transactionItem.category) {
-                CategoryEnum.INCOME.getName(view.layout.context).toLowerCase()
-                    .capitalize()
-                -> incomeRepository.deleteIncomeById(transactionItem.transactionId)
-                else -> expenseRepository.deleteExpenseById(transactionItem.transactionId)
-            }
-            view.removeItemFromAdapter(index)
-        }
+    //------------------------------Remove items using publish subject-------------------------------
+    private fun deleteItemFormRecycler() {
+        onItemDelete.observeOn(rxSchedulers.androidUI())
+            .subscribe({
+                val index = view.getAdapterItemList()
+                    .indexOfFirst { t -> t.transactionId == it.transactionId }
+                if (index != -1) {
+                    when (it.category) {
+                        CategoryEnum.INCOME.getName(view.layout.context).toLowerCase()
+                            .capitalize()
+                        -> incomeRepository.deleteIncomeById(it.transactionId)
+                        else -> expenseRepository.deleteExpenseById(it.transactionId)
+                    }
+                    view.removeItemFromAdapter(index)
+                }
+            }, {
+                it.localizedMessage
+            })
+            .disposeBy(compositeDisposables)
     }
+    //----------------------------------------------------------------------------------------------
 
+    //------------------Remove items using listener-----------------------------------------------
+//    override fun onDeleteClick(transactionItem: Transaction) {
+//        val index = view.getAdapterItemList()
+//            .indexOfFirst { t -> t.transactionId == transactionItem.transactionId }
+//        if (index != -1) {
+//            when (transactionItem.category) {
+//                CategoryEnum.INCOME.getName(view.layout.context).toLowerCase()
+//                    .capitalize()
+//                -> incomeRepository.deleteIncomeById(transactionItem.transactionId)
+//                else -> expenseRepository.deleteExpenseById(transactionItem.transactionId)
+//            }
+//            view.removeItemFromAdapter(index)
+//        }
+//    }
+//-------------------------------------------------------------------------------------------------
     private fun getDataFromDB(
         userId: String,
         startDate: Long,
