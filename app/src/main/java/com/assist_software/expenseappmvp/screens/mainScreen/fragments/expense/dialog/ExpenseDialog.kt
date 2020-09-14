@@ -9,19 +9,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.assist_software.expenseappmvp.R
-import com.assist_software.expenseappmvp.screens.addActionScreen.AddActionActivity
+import com.assist_software.expenseappmvp.screens.addActionScreen.AddActionActivityadd *
 import com.assist_software.expenseappmvp.screens.addActionScreen.enum.CategoryEnum
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.FragmentDialogListener
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.models.Transaction
 import com.assist_software.expenseappmvp.utils.TimeUtils
 import com.google.gson.Gson
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.category_item.view.*
 import kotlinx.android.synthetic.main.dialog_transaction_info.view.*
 
 
 class ExpenseDialog(
     private var transaction: Transaction,
-    private val listener: FragmentDialogListener
+    private var listener: PublishSubject<Transaction>
+    //private val listener: FragmentDialogListener
 ) : DialogFragment() {
     private lateinit var layout: View
 
@@ -83,7 +85,8 @@ class ExpenseDialog(
     }
 
     private val deleteOnClickListener = View.OnClickListener {
-        listener.onDeleteClick(transaction)
+        //listener.onDeleteClick(transaction)
+        listener.onNext(transaction)
         dialog?.dismiss()
     }
 
