@@ -12,7 +12,6 @@ import android.view.View
 import android.widget.DatePicker
 import android.widget.ImageView
 import android.widget.TimePicker
-import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
 import com.assist_software.expenseappmvp.R
@@ -21,6 +20,7 @@ import com.assist_software.expenseappmvp.data.database.entities.Income
 import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.screens.addActionScreen.adapter.CategoryAdapter
 import com.assist_software.expenseappmvp.screens.addActionScreen.adapter.models.CategoryItem
+import com.assist_software.expenseappmvp.screens.addActionScreen.adapter.models.DateTime
 import com.assist_software.expenseappmvp.screens.mainScreen.HomeActivity
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.models.Transaction
 import com.assist_software.expenseappmvp.utils.TimeUtils
@@ -36,39 +36,35 @@ import java.util.*
 class AddActionView(var activity: AddActionActivity) : DatePickerDialog.OnDateSetListener,
     TimePickerDialog.OnTimeSetListener {
     val layout: View = View.inflate(activity, R.layout.activity_add_action, null)
-    private var day = 0
-    private var month = 0
-    private var year = 0
-    private var hour = 0
-    private var minute = 0
-
-    private var savedDay = 0
-    private var savedMonth = 0
-    private var savedYear = 0
-    private var savedHour = 0
-    private var savedMinute = 0
+    var dateTime = DateTime()
 
     private var defaultDetailsText: String = ""
     private var defaultDetailsImage: ByteArray = ByteArray(0)
 
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        savedDay = dayOfMonth
-        savedMonth = month + 1
-        savedYear = year
+        dateTime.savedDay = dayOfMonth
+        dateTime.savedMonth = month + 1
+        dateTime.savedYear = year
 
         getDateTimeCalendar()
 
-        TimePickerDialog(activity, this, hour, minute, true).show()
+        TimePickerDialog(activity, this, dateTime.hour, dateTime.minute, true).show()
 
     }
 
     @SuppressLint("SetTextI18n")
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        savedHour = hourOfDay
-        savedMinute = minute
+        dateTime.savedHour = hourOfDay
+        dateTime.savedMinute = minute
 
-        layout.date_EditText.setText("$savedYear-$savedMonth-$savedDay at $savedHour:$savedMinute")
+        layout.date_EditText.setText(dateTime.savedYear.toString() + "-" +
+                dateTime.savedMonth.toString() + "-" +
+                dateTime.savedDay.toString() + " " +
+                dateTime.savedHour.toString() + ":" +
+                dateTime.savedMinute.toString()
+        )
+
     }
 
     fun showHomeScreen() {
@@ -90,19 +86,23 @@ class AddActionView(var activity: AddActionActivity) : DatePickerDialog.OnDateSe
         }
     }
 
-    private fun getDateTimeCalendar(){
+    private fun getDateTimeCalendar() {
         val cal = Calendar.getInstance()
-        day = cal.get(Calendar.DAY_OF_MONTH)
-        month = cal.get(Calendar.MONTH)
-        year = cal.get(Calendar.YEAR)
-        hour = cal.get(Calendar.HOUR)
-        minute = cal.get(Calendar.MINUTE)
+        dateTime.day = cal.get(Calendar.DAY_OF_MONTH)
+        dateTime.month = cal.get(Calendar.MONTH)
+        dateTime.year = cal.get(Calendar.YEAR)
+        dateTime.hour = cal.get(Calendar.HOUR)
+        dateTime.minute = cal.get(Calendar.MINUTE)
     }
 
     @SuppressLint("SimpleDateFormat")
     private fun getUTCTimestamp(): Long {
         val sdf = SimpleDateFormat("dd-MM-yyyy hh:mm")
-        val dateString = "$savedDay-$savedMonth-$savedYear $savedHour:$savedMinute"
+        val dateString = dateTime.savedDay.toString() + "-" +
+                dateTime.savedMonth.toString() + "-" +
+                dateTime.savedYear.toString() + " " +
+                dateTime.savedHour.toString() + ":" +
+                dateTime.savedMinute.toString()
         val date = sdf.parse(dateString)
         var calendar = Calendar.getInstance()
         calendar.time = date
@@ -111,7 +111,8 @@ class AddActionView(var activity: AddActionActivity) : DatePickerDialog.OnDateSe
 
     fun initDatePicker() {
         getDateTimeCalendar()
-        val datePickerDialog = DatePickerDialog(activity, this, year, month, day)
+        val datePickerDialog =
+            DatePickerDialog(activity, this, dateTime.year, dateTime.month, dateTime.day)
         datePickerDialog.show()
         datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
     }
@@ -188,7 +189,7 @@ class AddActionView(var activity: AddActionActivity) : DatePickerDialog.OnDateSe
     }
 
     fun getIncome(uid: String, category: String): Income {
-        if (layout.amount_EditText.text.toString() != null) {
+        if (layout.details_EditText.text.isNotEmpty()) {
             defaultDetailsText = layout.details_EditText.text.toString()
         }
         if (layout.details_ImageView != null) {
@@ -208,7 +209,7 @@ class AddActionView(var activity: AddActionActivity) : DatePickerDialog.OnDateSe
     }
 
     fun getExpense(uid: String, category: String): Expense {
-        if (layout.amount_EditText.text.toString().isNotEmpty()) {
+        if (layout.details_EditText.text.isNotEmpty()) {
             defaultDetailsText = layout.details_EditText.text.toString()
         }
         if (layout.details_ImageView != null) {
