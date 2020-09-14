@@ -16,6 +16,7 @@ import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
+import kotlinx.android.synthetic.main.activity_add_action.view.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -87,20 +88,26 @@ class AddActionPresenter(
     private fun saveAction() {
         return view.onSaveClick()
             .subscribe({
-                if (categorySelected == view.activity.getString(R.string.income)) {
-                    saveIncomeTransaction()
-                    Toast.makeText(
-                        view.activity,
-                        view.activity.getString(R.string.budget_saved),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                if (view.layout.date_EditText.text.isEmpty() || view.layout.amount_EditText.text.isEmpty()) {
+                    Toast.makeText(view.activity,
+                        view.activity.getString(R.string.mandatory_fields),
+                        Toast.LENGTH_SHORT).show()
                 } else {
-                    saveExpenseTransaction()
-                    Toast.makeText(
-                        view.activity,
-                        view.activity.getString(R.string.expense_saved),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    if (categorySelected == view.activity.getString(R.string.income)) {
+                        saveIncomeTransaction()
+                        Toast.makeText(
+                            view.activity,
+                            view.activity.getString(R.string.budget_saved),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        saveExpenseTransaction()
+                        Toast.makeText(
+                            view.activity,
+                            view.activity.getString(R.string.expense_saved),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }, {
                 Timber.e(it.localizedMessage)
@@ -206,20 +213,26 @@ class AddActionPresenter(
     private fun saveEditAction() {
         return view.onSaveClick()
             .subscribe({
-                if (categorySelected == view.activity.getString(R.string.income)) {
-                    saveEditIncomeTransaction()
-                    Toast.makeText(
-                        view.activity,
-                        view.activity.getString(R.string.budget_edited),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                if (view.layout.date_EditText.text.isEmpty() || view.layout.amount_EditText.text.isEmpty()) {
+                    Toast.makeText(view.activity,
+                        view.activity.getString(R.string.mandatory_fields),
+                        Toast.LENGTH_SHORT).show()
                 } else {
-                    saveEditExpenseTransaction()
-                    Toast.makeText(
-                        view.activity,
-                        view.activity.getString(R.string.expense_edited),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    if (categorySelected == view.activity.getString(R.string.income)) {
+                        saveEditIncomeTransaction()
+                        Toast.makeText(
+                            view.activity,
+                            view.activity.getString(R.string.budget_edited),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        saveEditExpenseTransaction()
+                        Toast.makeText(
+                            view.activity,
+                            view.activity.getString(R.string.expense_edited),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }, {
                 Timber.e(it.localizedMessage)
