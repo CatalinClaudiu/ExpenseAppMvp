@@ -3,11 +3,13 @@ package com.assist_software.expenseappmvp.screens.currencyConverterScreen
 import android.widget.Toast
 import com.assist_software.expenseappmvp.R
 import com.assist_software.expenseappmvp.application.builder.RestServiceInterface
-import com.assist_software.expenseappmvp.data.restModels.response.CurrencyCoin
+import com.assist_software.expenseappmvp.data.restModels.response.CurrencyResponse
+import com.assist_software.expenseappmvp.data.utils.Constants
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 class CurrencyConverterPresenter(
     private val view: CurrencyConverterView,
@@ -16,13 +18,43 @@ class CurrencyConverterPresenter(
     private val compositeDisposables: CompositeDisposable
 ) {
 
+    private var currencyObj: CurrencyResponse? = null
+
     fun onCreate() {
-        compositeDisposables.addAll(getCurrency())
+        compositeDisposables.addAll(getCurrency(), convertCurrencyRonToValue()/*, convertCurrencyValueToRon(), nativeEditTextClick()*/)
     }
 
     fun onDestroy() {
         compositeDisposables.clear()
     }
+
+    private fun convertCurrencyRonToValue(): Disposable {
+        return view.getCurrencyRonToValue()
+            .debounce(Constants.AWAIT_INPUT, TimeUnit.MILLISECONDS)
+            .observeOn(rxSchedulers.androidUI())
+            .subscribe { view.calculateRonToValue() }
+    }
+
+    private fun convertCurrencyValueToRon(): Disposable {
+        return view.getCurrencyValueToRon()
+            .debounce(Constants.AWAIT_INPUT, TimeUnit.MILLISECONDS)
+            .observeOn(rxSchedulers.androidUI())
+            .subscribe { view.calculateValueToRon() }
+    }
+
+//    private fun nativeEditTextClick(): Disposable{
+//        return view.setNativeEditTextFocus()
+//            .debounce(Constants.AWAIT_INPUT, TimeUnit.MILLISECONDS)
+//            .observeOn(rxSchedulers.androidUI())
+//            .subscribe{view.focusChange(true)}
+//    }
+//
+//    private fun foreignEditTextClick(): Disposable{
+//        return view.setForeignEditTextFocus()
+//            .debounce(Constants.AWAIT_INPUT, TimeUnit.MILLISECONDS)
+//            .observeOn(rxSchedulers.androidUI())
+//            .subscribe{view.focusChange(false)}
+//    }
 
     private fun getCurrency(): Disposable {
         return converterAPI.allCurrency
@@ -32,8 +64,8 @@ class CurrencyConverterPresenter(
                 Timber.e(it.localizedMessage)
             }
             .doOnNext { currencyResponse ->
-                val currencyObj: CurrencyCoin = currencyResponse?.rates!!
-                view.initSpinners(currencyObj)
+                currencyObj = currencyResponse
+                view.initSpinners(currencyObj?.rates)
                 view.initMessage(currencyResponse.date)
             }
             .subscribe({
