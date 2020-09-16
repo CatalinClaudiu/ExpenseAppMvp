@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.assist_software.expenseappmvp.R
-import com.assist_software.expenseappmvp.screens.addActionScreen.AddActionActivityadd *
+import com.assist_software.expenseappmvp.screens.addActionScreen.AddActionActivity
 import com.assist_software.expenseappmvp.screens.addActionScreen.enum.CategoryEnum
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.FragmentDialogListener
 import com.assist_software.expenseappmvp.screens.mainScreen.fragments.expense.adapter.models.Transaction
