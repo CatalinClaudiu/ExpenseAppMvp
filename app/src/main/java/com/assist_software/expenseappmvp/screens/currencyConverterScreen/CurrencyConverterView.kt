@@ -14,11 +14,6 @@ import kotlinx.android.synthetic.main.home_toolbar.view.*
 
 class CurrencyConverterView(var activity: CurrencyConverterActivity) {
     val layout: View = View.inflate(activity, R.layout.activity_currency_converter, null)
-//    var hasFocus = true
-//
-//    fun focusChange(param: Boolean){
-//        hasFocus = param
-//    }
 
     fun iniToolbar() {
         var toolbar = layout.home_tool_bar
@@ -48,12 +43,8 @@ class CurrencyConverterView(var activity: CurrencyConverterActivity) {
         return RxTextView.textChanges(layout.foreign_currency).skipInitialValue()
     }
 
-    fun setNativeEditTextFocus(): Observable<Any> {
-        return RxView.clicks(layout.native_currency)
-    }
-
-    fun setForeignEditTextFocus(): Observable<Any> {
-        return RxView.clicks(layout.foreign_currency)
+    fun getTextClick(): Observable<Any> {
+        return RxView.clicks(layout.native_currency).skip(1)
     }
 
     fun initSpinners(currencyObj: CurrencyCoin?) {
@@ -68,33 +59,29 @@ class CurrencyConverterView(var activity: CurrencyConverterActivity) {
                     position: Int,
                     id: Long
                 ) {
-                    val item = parent?.getItemAtPosition(position) as CurrencyItem
-//                if(hasFocus){
-                    calculateRonToValue()
-//                }
-//                else{
-//                    calculateValueToRon()
-//                }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
     }
 
-    fun calculateRonToValue() {
+    fun calculateRonToValue(amount: Double) {
         val item = layout.foreign_currency_spinner.selectedItem as CurrencyItem
-        if (layout.native_currency.text.isNotEmpty()) {
-            var valueToConvert = layout.native_currency.text.toString().toDouble()
-            layout.foreign_currency.setText((valueToConvert * item.currencyValue).toString())
-        }
+        layout.foreign_currency.setText((amount * item.currencyValue).toString())
     }
 
-    fun calculateValueToRon() {
+
+    fun calculateValueToRon(amount: Double) {
         val item = layout.foreign_currency_spinner.selectedItem as CurrencyItem
-        if (layout.foreign_currency.text.isNotEmpty()) {
-            var valueToConvert = layout.foreign_currency.text.toString().toDouble()
-            layout.native_currency.setText((valueToConvert / item.currencyValue).toString())
-        }
+        layout.native_currency.setText((amount / item.currencyValue).toString())
+    }
+
+    fun isRonCaseSelected(): Boolean {
+        return layout.native_currency.isFocused
+    }
+
+    fun isForeignCaseSelected(): Boolean {
+        return layout.foreign_currency.isFocused
     }
 
     private fun initForeignSpinner(currencyObj: CurrencyCoin) {
@@ -118,4 +105,15 @@ class CurrencyConverterView(var activity: CurrencyConverterActivity) {
         val nativeSpinner = CurrencyAdapter(activity, nativeList)
         layout.native_currency_spinner.adapter = nativeSpinner
     }
+
+//    fun EditText.updateText(text: String) {
+//        val focused = hasFocus()
+//        if (focused) {
+//            clearFocus()
+//        }
+//        setText(text)
+//        if (focused) {
+//            requestFocus()
+//        }
+//    }
 }
