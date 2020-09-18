@@ -24,6 +24,7 @@ object Constants {
     const val USER_ID = "USER_ID"
     const val USER_NAME = "USER_NAME"
     const val URL_SERVER = "https://api.exchangerate.host/"
+    const val CHANNEL_ID = "BALANCE_NOTIFICATION_SERVICE_CHANNEL"
 
     //Throttle
     const val THROTTLE_DURATION = 1L
