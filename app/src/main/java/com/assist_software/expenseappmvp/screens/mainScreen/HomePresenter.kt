@@ -9,43 +9,43 @@ import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
 class HomePresenter(
-    private val view: HomeView,
-    private val sharedPref: SharedPrefUtils,
-    private val rxSchedulers: RxSchedulers,
-    private val userRepository: UserRepository,
-    private val compositeDisposables: CompositeDisposable
+        private val view: HomeView,
+        private val sharedPref: SharedPrefUtils,
+        private val rxSchedulers: RxSchedulers,
+        private val userRepository: UserRepository,
+        private val compositeDisposables: CompositeDisposable
 ) {
     private fun onAddActionClick(): Disposable {
         return view.goToAddActionScreen()
-            .observeOn(rxSchedulers.androidUI())
-            .subscribe {
-                view.showAddActionScreen()
-            }
+                .observeOn(rxSchedulers.androidUI())
+                .subscribe {
+                    view.showAddActionScreen()
+                }
     }
 
     private fun onLogOutClick(): Disposable {
         return view.logOutUser()
-            .observeOn(rxSchedulers.androidUI())
-            .throttleFirst(THROTTLE_DURATION, TimeUnit.SECONDS)
-            .doOnNext { sharedPref.clear() }
-            .subscribe {
-                view.showLoginScreen()
-            }
+                .observeOn(rxSchedulers.androidUI())
+                .throttleFirst(THROTTLE_DURATION, TimeUnit.SECONDS)
+                .doOnNext { sharedPref.clear() }
+                .subscribe {
+                    view.showLoginScreen()
+                }
     }
 
-    private fun getUserName(): Disposable{
+    private fun getUserName(): Disposable {
         var uid = ""
-        if(sharedPref.hasKey(Constants.USER_ID)){
-           uid = sharedPref.read(Constants.USER_ID, "").toString()
+        if (sharedPref.hasKey(Constants.USER_ID)) {
+            uid = sharedPref.read(Constants.USER_ID, "").toString()
         }
 
         return userRepository.getUserName(uid)
-            .observeOn(rxSchedulers.background())
-            .doOnSuccess {
-                view.setUserName(it)
-            }
-            .observeOn(rxSchedulers.androidUI())
-            .subscribe()
+                .observeOn(rxSchedulers.background())
+                .doOnSuccess {
+                    view.setUserName(it)
+                }
+                .observeOn(rxSchedulers.androidUI())
+                .subscribe()
     }
 
     fun onCreate() {
