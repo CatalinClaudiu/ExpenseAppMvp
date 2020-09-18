@@ -34,6 +34,7 @@ android {
             dimension "app"
             versionNameSuffix "-dev"
             buildConfigField 'String', 'API_URL', '"https://api.exchangerate.host/"'
+            buildConfigField 'String', 'BALANCE_NOTIFICATION_URL', '"http://10.0.2.2:3000/"'
         }
         mock {
             dimension "app"

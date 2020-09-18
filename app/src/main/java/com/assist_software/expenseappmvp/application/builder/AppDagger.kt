@@ -13,6 +13,7 @@ import dagger.Component
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import javax.inject.Named
 import javax.inject.Scope
 
 @Scope
@@ -31,8 +32,8 @@ class AppModule(private val context: Context) {
 
 @AppScope
 @Component(
-    modules = [(AppModule::class), (DatabaseServiceModule::class), (RxModule::class),
-        (RestServiceModule::class), (GsonModule::class), (NetworkModule::class), (FirebaseAuthModule::class), (SharedPrefModule::class)]
+        modules = [(AppModule::class), (DatabaseServiceModule::class), (RxModule::class),
+            (RestServiceModule::class), (GsonModule::class), (NetworkModule::class), (FirebaseAuthModule::class), (SharedPrefModule::class)]
 )
 interface AppComponent {
 
@@ -42,7 +43,11 @@ interface AppComponent {
 
     fun rxBus(): RxBus
 
+    @Named("exchange")
     fun retrofit(): Retrofit
+
+    @Named("server")
+    fun provideRetrofitServer(): Retrofit
 
     fun appDatabase(): AppDatabase
 
@@ -57,4 +62,6 @@ interface AppComponent {
     fun expenseRepository(): ExpenseRepository
 
     fun provideAPIInterface(): RestServiceInterface
+
+    fun provideServerInterface(): RestServiceNotification
 }

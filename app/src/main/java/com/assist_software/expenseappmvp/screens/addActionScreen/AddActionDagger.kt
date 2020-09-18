@@ -2,6 +2,7 @@ package com.assist_software.expenseappmvp.screens.addActionScreen
 
 import android.content.Context
 import com.assist_software.expenseappmvp.application.builder.AppComponent
+import com.assist_software.expenseappmvp.application.builder.RestServiceNotification
 import com.assist_software.expenseappmvp.data.database.repositories.ExpenseRepository
 import com.assist_software.expenseappmvp.data.database.repositories.IncomeRepository
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
@@ -49,6 +50,7 @@ class AddActionModule(private val activity: AddActionActivity) {
         rxSchedulers: RxSchedulers,
         incomeRepository: IncomeRepository,
         expenseRepository: ExpenseRepository,
+        restNotification: RestServiceNotification,
         sharedPref: SharedPrefUtils,
         rxPermissions: RxPermissions
     ): AddActionPresenter {
@@ -59,6 +61,7 @@ class AddActionModule(private val activity: AddActionActivity) {
             rxPermissions,
             incomeRepository,
             expenseRepository,
+            restNotification,
             sharedPref,
             compositeDisposable
         )

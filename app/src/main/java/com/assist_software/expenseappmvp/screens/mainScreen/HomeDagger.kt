@@ -1,6 +1,7 @@
 package com.assist_software.expenseappmvp.screens.mainScreen
 
 import com.assist_software.expenseappmvp.application.builder.AppComponent
+import com.assist_software.expenseappmvp.application.builder.RestServiceNotification
 import com.assist_software.expenseappmvp.data.database.repositories.UserRepository
 import com.assist_software.expenseappmvp.data.utils.rx.RxSchedulers
 import com.assist_software.expenseappmvp.utils.SharedPrefUtils
