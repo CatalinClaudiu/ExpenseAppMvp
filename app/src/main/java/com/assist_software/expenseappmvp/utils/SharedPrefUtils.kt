@@ -3,8 +3,9 @@ package com.assist_software.expenseappmvp.utils
 import android.content.Context
 import android.content.SharedPreferences
 import com.assist_software.expenseappmvp.data.utils.Constants
+import javax.inject.Inject
 
-class SharedPrefUtils(private val context: Context) {
+class SharedPrefUtils @Inject constructor(private val context: Context) {
     private val sharedPref =
         context.getSharedPreferences(Constants.MY_SHARED_PREFERENCE, Context.MODE_PRIVATE)
 

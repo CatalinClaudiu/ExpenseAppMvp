@@ -22,7 +22,8 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         DaggerHomeComponent.builder().appComponent(ExpenseApp.appComponent(this))
-            .homeModule(HomeModule(this)).build().inject(this)
+            .homeModule(HomeModule(this))
+            .build().inject(this)
 
         setContentView(view.layout)
         view.initComponents()

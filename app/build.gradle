@@ -82,6 +82,11 @@ dependencies {
     implementation "com.google.dagger:dagger:$rootProject.dagger"
     implementation "com.android.support:support-v4:$rootProject.support"
     implementation "com.android.support:exifinterface:$rootProject.support"
+    implementation "com.google.dagger:dagger-android:$rootProject.dagger"
+    implementation "com.google.dagger:dagger-android-support:$rootProject.dagger"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger"
+    kapt "com.google.dagger:dagger-android-processor:$rootProject.dagger"
+    kapt "com.google.dagger:dagger-android-support:$rootProject.dagger"
 
     //Firebase
     implementation 'com.google.firebase:firebase-auth:19.3.2'
